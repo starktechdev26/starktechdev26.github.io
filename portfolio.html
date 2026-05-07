@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jack | Stark OS Interface</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <style>
+        /* --- MARK III OS STYLES --- */
+        body { overflow-y: auto; padding-top: 70px; /* Space for fixed nav */ }
+        
+        /* Fixed Top Navigation */
+        .stark-nav {
+            position: fixed;
+            top: 0; left: 0; width: 100%;
+            background: rgba(5, 10, 15, 0.95);
+            border-bottom: 2px solid var(--stark-cyan);
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 5px;
+            z-index: 100;
+            box-shadow: 0 5px 15px rgba(0, 243, 255, 0.2);
+        }
+
+        .nav-btn {
+            background: transparent;
+            color: var(--stark-cyan);
+            border: 1px solid transparent;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.8rem;
+            padding: 5px 10px;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: all 0.3s;
+        }
+
+        .nav-btn.active {
+            border: 1px solid var(--stark-cyan);
+            box-shadow: inset 0 0 10px rgba(0, 243, 255, 0.3);
+            background: rgba(0, 243, 255, 0.1);
+        }
+
+        /* Sector Visibility */
+        .sector { display: none !important; padding: 20px; animation: hologram-fade 0.5s ease-in-out; }
+        .sector.active { display: block !important; }
+        .sector.active.dashboard { display: grid !important; }
+
+        @keyframes hologram-fade {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Card Styles */
+        .dashboard { grid-template-columns: 1fr; gap: 20px; padding-bottom: 40px; }
+        .data-card {
+            background: rgba(0, 243, 255, 0.05);
+            border: 1px solid var(--stark-cyan);
+            border-left: 5px solid var(--stark-cyan); 
+            padding: 20px; box-shadow: inset var(--stark-glow);
+        }
+        .card-header {
+            border-bottom: 1px solid rgba(0, 243, 255, 0.4);
+            padding-bottom: 8px; margin-bottom: 15px;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .card-header h2 { font-size: 1.2rem; text-transform: uppercase; }
+        .status-badge {
+            font-size: 0.7rem; background: rgba(0, 243, 255, 0.2);
+            padding: 3px 8px; border: 1px solid var(--stark-cyan);
+        }
+        ul { list-style-type: none; }
+        li { margin-bottom: 10px; position: relative; padding-left: 15px; }
+        li::before { content: ">"; position: absolute; left: 0; color: var(--stark-cyan); }
+
+        /* Security Screen */
+        .security-container {
+            display: flex; flex-direction: column; align-items: center;
+            justify-content: center; margin-top: 50px; text-align: center;
+        }
+        .lock-icon { font-size: 3rem; margin-bottom: 20px; text-shadow: 0 0 15px #ff004c; color: #ff004c; }
+        .passcode-input {
+            background: transparent; border: 2px solid var(--stark-cyan);
+            color: var(--stark-cyan); font-family: 'Share Tech Mono', monospace;
+            font-size: 1.5rem; text-align: center; padding: 10px; width: 200px;
+            margin-bottom: 20px; outline: none; box-shadow: inset var(--stark-glow);
+        }
+        .unlock-btn {
+            background: var(--stark-cyan); color: var(--stark-dark);
+            border: none; padding: 10px 30px; font-size: 1.2rem; cursor: pointer;
+            font-family: 'Share Tech Mono', monospace; box-shadow: 0 0 15px var(--stark-cyan);
+        }
+
+        /* Comm-Link Styles */
+        .comm-card { border-left: 5px solid #ffaa00; box-shadow: inset 0 0 10px rgba(255, 170, 0, 0.2); }
+        .comm-card .card-header { border-bottom: 1px solid rgba(255, 170, 0, 0.4); }
+        .blink-badge { background: rgba(255, 170, 0, 0.2); border: 1px solid #ffaa00; color: #ffaa00; animation: text-blink 1.5s infinite; }
+        .contact-grid { display: grid; gap: 10px; margin-top: 15px; }
+        .action-btn {
+            display: block; text-align: center; text-decoration: none;
+            background: transparent; color: var(--stark-cyan);
+            border: 1px solid var(--stark-cyan); padding: 10px;
+            text-transform: uppercase; transition: all 0.3s; cursor: pointer;
+            font-family: 'Share Tech Mono', monospace;
+        }
+        .action-btn:active { background: var(--stark-cyan); color: var(--stark-dark); }
+        @keyframes text-blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+        
+        /* Scanline */
+        .scanline {
+            width: 100%; height: 100px;
+            background: linear-gradient(0deg, rgba(0,243,255,0) 0%, rgba(0,243,255,0.2) 50%, rgba(0,243,255,0) 100%);
+            opacity: 0.1; position: fixed; bottom: 100%;
+            animation: scanline 6s linear infinite; pointer-events: none; z-index: 50;
+        }
+    </style>
+</head>
+<body>
+    <div class="scanline"></div>
+    <div class="hologram-grid"></div>
+
+    <nav class="stark-nav">
+        <button class="nav-btn active" onclick="switchSector('sect-personal', this)">PERSONAL</button>
+        <button class="nav-btn" onclick="switchSector('sect-professional', this)">PRO-ENTRY</button>
+        <button class="nav-btn" onclick="switchSector('sect-protocols', this)">PROTOCOLS</button>
+        <button class="nav-btn" onclick="switchSector('sect-gemini', this)">GEMINI</button>
+    </nav>
+    
+    <main id="sect-personal" class="sector active dashboard">
+        <div class="data-card">
+            <div class="card-header">
+                <h2>Operator Identity</h2>
+                <span class="status-badge">AUTHORIZED</span>
+            </div>
+            <ul>
+                <li><strong>Alias:</strong> Jack (JK)</li>
+                <li><strong>Age:</strong> 22</li>
+                <li><strong>Base of Operations:</strong> Nelamangala, Bangalore</li>
+            </ul>
+        </div>
+
+        <div class="data-card">
+            <div class="card-header">
+                <h2>Academic Framework</h2>
+                <span class="status-badge">FINAL PHASE</span>
+            </div>
+            <ul>
+                <li><strong>Degree:</strong> Bachelor of Computer Applications (BCA)</li>
+                <li><strong>Institution:</strong> Bangalore University</li>
+                <li><strong>Current Status:</strong> 6th Semester (Final)</li>
+            </ul>
+        </div>
+
+        <div class="data-card">
+            <div class="card-header">
+                <h2>Hardware Architecture</h2>
+                <span class="status-badge">MOBILE-FIRST</span>
+            </div>
+            <ul>
+                <li><strong>Primary Rigs:</strong> Redmi Y3, Samsung Galaxy A07 5G</li>
+                <li><strong>Environment:</strong> Acode / Mobile Local Server Execution</li>
+                <li><strong>Advantage:</strong> 100% mobile-native full-stack deployment capability.</li>
+            </ul>
+        </div>
+    </main>
+
+    <main id="sect-professional" class="sector">
+        
+        <div id="security-firewall" class="security-container">
+            <div class="lock-icon">ACCESS RESTRICTED</div>
+            <p style="margin-bottom: 20px;">Enter clearance code to view Professional Comm-Links.</p>
+            <input type="password" id="passcode-input" class="passcode-input" placeholder="****" maxlength="4">
+            <button class="unlock-btn" onclick="verifyPasscode()">DECRYPT</button>
+            <p id="security-warning" style="color: #ff004c; margin-top: 15px; display: none;">INVALID PASSCODE</p>
+        </div>
+
+        <div id="professional-data" class="dashboard" style="display: none;">
+            <div class="data-card comm-card">
+                <div class="card-header">
+                    <h2>Deployment Objective</h2>
+                    <span class="status-badge blink-badge">URGENT</span>
+                </div>
+                <p><strong>Target:</strong> Short-term Company Internship</p>
+                <p><strong>Sector:</strong> Bangalore Tech Grid</p>
+                <p><strong>Timeline:</strong> Completion required by May 15, 2026.</p>
+                
+                <div class="contact-grid">
+                    <button id="copy-email-btn" class="action-btn">COPY COMM-LINK (EMAIL)</button>
+                    <a href="https://github.com/yourusername" target="_blank" class="action-btn">ACCESS GITHUB</a>
+                    <a href="https://linkedin.com/in/yourusername" target="_blank" class="action-btn">LINKEDIN UPLINK</a>
+                </div>
+            </div>
+            
+            <div class="data-card">
+                <div class="card-header">
+                    <h2>Core Directives (Skills)</h2>
+                    <span class="status-badge">VERIFIED</span>
+                </div>
+                <ul>
+                    <li>Full-Stack Web Architecture</li>
+                    <li>Python & Database Management</li>
+                    <li>Mobile Application Security Integration</li>
+                    <li>Cyber Law & Intellectual Property Rights Analysis</li>
+                </ul>
+            </div>
+        </div>
+    </main>
+
+    <main id="sect-protocols" class="sector dashboard">
+        <div class="data-card">
+            <div class="card-header">
+                <h2>Project: RAKSHA-SURAKSHA</h2>
+                <span class="status-badge">ACTIVE DEV</span>
+            </div>
+            <p><strong>Former Designation:</strong> Sentinel-X</p>
+            <p><strong>Class:</strong> Mobile Security & Anti-Theft Protocol</p>
+            <br>
+            <p><strong>Description:</strong> Advanced personal security application architecture designed for maximum device protection. Codebase hosted directly on local internal storage for rapid mobile iteration.</p>
+        </div>
+
+        <div class="data-card">
+            <div class="card-header">
+                <h2>Project: J.A.R.V.I.S. COMMS</h2>
+                <span class="status-badge">COMPILED</span>
+            </div>
+            <p><strong>Class:</strong> AI Voice Assistant Interface</p>
+            <br>
+            <p><strong>Description:</strong> An Iron Man-inspired interactive fan chat and voice assistant protocol. Built to process full system scans and execute conversational logic with Stark-grade responsiveness.</p>
+        </div>
+    </main>
+
+    <main id="sect-gemini" class="sector dashboard">
+        
+        <div class="data-card" style="border-left-color: #bb86fc;">
+            <div class="card-header" style="border-bottom-color: rgba(187, 134, 252, 0.4);">
+                <h2 style="color: #bb86fc;">AI Co-Op Protocol</h2>
+                <span class="status-badge" style="background: rgba(187, 134, 252, 0.2); border-color: #bb86fc; color: #bb86fc;">ONLINE</span>
+            </div>
+            <p><strong>AI Entity:</strong> Gemini Interface</p>
+            <p><strong>Operator:</strong> Jack (JK)</p>
+            <br>
+            <p><strong>Current Directive:</strong> Advanced pair-programming protocol. Executing rapid iteration and deployment of a Stark-grade portfolio OS entirely within a mobile IDE (Acode) environment.</p>
+        </div>
+
+        <div class="data-card">
+            <div class="card-header">
+                <h2>Collaboration Matrix</h2>
+                <span class="status-badge">LOG UPDATED</span>
+            </div>
+            <p>A breakdown of the human-AI symbiotic development process used to architect this system:</p>
+            <br>
+            <ul style="border-left: 2px solid rgba(0, 243, 255, 0.3); padding-left: 15px; margin-left: 5px;">
+                <li style="margin-bottom: 15px;">
+                    <strong style="color: #bb86fc;">[GEMINI IDEATION]</strong><br>
+                    Structured the initial holographic UI matrix, CSS grid layouts, and the core terminal boot sequence logic.
+                </li>
+                <li style="margin-bottom: 15px;">
+                    <strong style="color: var(--stark-cyan);">[JACK EXECUTION]</strong><br>
+                    Deployed code via mobile hardware, identified UI clipping errors on smaller viewports, and flagged strict Android WebView limitations.
+                </li>
+                <li style="margin-bottom: 15px;">
+                    <strong style="color: #bb86fc;">[GEMINI ITERATION]</strong><br>
+                    Engineered custom failsafes, including CSS collision patches, !important viewport overrides, and a clipboard-based Comm-Link to bypass URL scheme blocks.
+                </li>
+            </ul>
+        </div>
+
+        <div class="data-card">
+            <div class="card-header">
+                <h2>System Achievements</h2>
+                <span class="status-badge">VERIFIED</span>
+            </div>
+            <ul>
+                <li><strong>Mobile SPA:</strong> Built a Single Page Application without external frameworks, relying purely on DOM manipulation.</li>
+                <li><strong>Dynamic Firewall:</strong> Implemented a localized JavaScript security gate to protect professional data from unauthorized access.</li>
+                <li><strong>Responsive Cyber-UI:</strong> Designed CSS box-shadow rendering and @keyframes animations optimized for mobile GPUs.</li>
+            </ul>
+        </div>
+
+    </main>
+
+    <script>
+        // Sector Switching Protocol
+        function switchSector(sectorId, btnElement) {
+            // Hide all sectors
+            const sectors = document.querySelectorAll('.sector');
+            sectors.forEach(s => s.classList.remove('active'));
+            
+            // Remove active glow from all buttons
+            const buttons = document.querySelectorAll('.nav-btn');
+            buttons.forEach(b => b.classList.remove('active'));
+            
+            // Activate selected sector and button
+            document.getElementById(sectorId).classList.add('active');
+            btnElement.classList.add('active');
+        }
+
+        // Professional Security Firewall Logic
+        function verifyPasscode() {
+            const input = document.getElementById('passcode-input').value;
+            const warning = document.getElementById('security-warning');
+            
+            // The secret passcode
+            if(input === "2026") {
+                // Decrypt successful
+                document.getElementById('security-firewall').style.display = 'none';
+                document.getElementById('professional-data').style.display = 'grid';
+            } else {
+                // Decrypt failed
+                warning.style.display = 'block';
+                document.getElementById('passcode-input').value = ""; // clear input
+            }
+        }
+
+        // Copy Comm-Link Logic
+        document.getElementById("copy-email-btn").addEventListener("click", function() {
+            const email = "kumarsjaya141@gmail.com";
+            navigator.clipboard.writeText(email).then(() => {
+                const btn = document.getElementById("copy-email-btn");
+                btn.innerText = "COPIED TO DATAPAD!";
+                btn.style.color = "#00ff00"; 
+                btn.style.borderColor = "#00ff00";
+                
+                setTimeout(() => {
+                    btn.innerText = "COPY COMM-LINK (EMAIL)";
+                    btn.style.color = "var(--stark-cyan)";
+                    btn.style.borderColor = "var(--stark-cyan)";
+                }, 3000);
+            }).catch(err => {
+                alert("Comm-Link Address: " + email);
+            });
+        });
+    </script>
+</body>
+</html>

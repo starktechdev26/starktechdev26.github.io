@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jack | Stark Industries System</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+</head>
+<body>
+  
+    <div id="boot-screen" class="boot-screen">
+        <button id="init-btn" class="init-btn">INITIALIZE SYSTEM</button>
+    </div>
+
+    <div class="hologram-grid"></div>
+    
+    <div class="hud-container">
+        <header class="hud-header">
+            <h1 class="stark-logo">STARK <span>TECH</span></h1>
+            <div class="system-status">SYS: <span class="online">ONLINE</span></div>
+        </header>
+
+        <main class="terminal-box">
+            <div id="jarvis-output"></div>
+            <span class="cursor">_</span>
+        </main>
+        
+        <div class="arc-reactor">
+            <div class="reactor-ring outer-ring"></div>
+            <div class="reactor-ring coil-ring"></div>
+            <div class="reactor-ring inner-ring"></div>
+            <div class="reactor-core"></div>
+        </div>
+    </div> <script src="jarvis.js"></script>
+</body>
+</html>
