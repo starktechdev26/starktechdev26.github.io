@@ -32,6 +32,70 @@
             <div class="reactor-ring inner-ring"></div>
             <div class="reactor-core"></div>
         </div>
-    </div> <script src="jarvis.js"></script>
+    </div>
+
+    <script>
+        const outputDiv = document.getElementById("jarvis-output");
+        const terminalBox = document.querySelector(".terminal-box");
+        const bootScreen = document.getElementById("boot-screen");
+        const initBtn = document.getElementById("init-btn");
+
+        const bootSequence = [
+            "J.A.R.V.I.S. SYSTEM ONLINE.",
+            "Bypassing mainframe...",
+            "Accessing Full-Stack Developer profiles...",
+            "Loading protocols for Jack...",
+            "Welcome, sir. All systems are operating at 100% capacity.",
+            "Redirecting to secure database..."
+        ];
+
+        let lineIndex = 0;
+        let charIndex = 0;
+
+        // Safe Voice Function
+        function speakLine(text) {
+            try {
+                if ('speechSynthesis' in window) {
+                    window.speechSynthesis.cancel();
+                    const utterance = new SpeechSynthesisUtterance(text);
+                    utterance.pitch = 0.9;
+                    utterance.rate = 0.9;
+                    window.speechSynthesis.speak(utterance);
+                }
+            } catch (e) {
+                console.log("Voice blocked by browser, continuing visual sequence.");
+            }
+        }
+
+        function typeWriter() {
+            if (lineIndex < bootSequence.length) {
+                if (charIndex === 0) { speakLine(bootSequence[lineIndex]); }
+
+                if (charIndex < bootSequence[lineIndex].length) {
+                    outputDiv.innerHTML += bootSequence[lineIndex].charAt(charIndex);
+                    charIndex++;
+                    terminalBox.scrollTop = terminalBox.scrollHeight;
+                    setTimeout(typeWriter, 50); 
+                } else {
+                    outputDiv.innerHTML += "<br><br>";
+                    lineIndex++;
+                    charIndex = 0;
+                    terminalBox.scrollTop = terminalBox.scrollHeight;
+                    setTimeout(typeWriter, 1200); 
+                }
+            } else {
+                // Redirect to the newly named Mark III OS
+                setTimeout(() => {
+                    window.location.href = "portfolio.html"; 
+                }, 2000); 
+            }
+        }
+
+        // Engage System
+        initBtn.addEventListener("click", () => {
+            bootScreen.style.display = "none";
+            setTimeout(typeWriter, 500);
+        });
+    </script>
 </body>
 </html>
