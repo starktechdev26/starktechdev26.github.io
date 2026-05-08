@@ -14,11 +14,8 @@
         }
         .btn-group { display: grid; grid-template-columns: 1fr; gap: 10px; margin-top: 20px; }
         
-        /* Voice & Mic Animations */
         #voice-toggle.active {
-            background: rgba(187, 134, 252, 0.2);
-            box-shadow: inset 0 0 10px rgba(187, 134, 252, 0.5);
-            color: #fff;
+            background: rgba(187, 134, 252, 0.2); box-shadow: inset 0 0 10px rgba(187, 134, 252, 0.5); color: #fff;
         }
         
         @keyframes pulse-mic {
@@ -28,10 +25,8 @@
         }
         
         .mic-active {
-            background: rgba(187, 134, 252, 0.4) !important;
-            color: #fff !important;
-            animation: pulse-mic 1.5s infinite;
-            border-color: #fff !important;
+            background: rgba(187, 134, 252, 0.4) !important; color: #fff !important;
+            animation: pulse-mic 1.5s infinite; border-color: #fff !important;
         }
     </style>
 </head>
@@ -62,7 +57,6 @@
                 <li><strong>Encryption:</strong> AES-256 Enabled</li>
             </ul>
         </div>
-
         <div class="data-card">
             <div class="card-header">
                 <h2>Hardware Matrix</h2>
@@ -83,13 +77,11 @@
                 <span class="status-badge" style="color: var(--stark-red); border-color: var(--stark-red); background: rgba(255, 0, 76, 0.1);">ARMED</span>
             </div>
             <p>Anti-Theft Protocol monitoring active. Select a command to push via the global network to connected devices.</p>
-            
             <div class="btn-group">
                 <button class="action-btn" onclick="runCommand('LOCATE')" style="border-color: #ffaa00; color: #ffaa00;">FORCE GPS PING</button>
                 <button class="action-btn" onclick="runCommand('LOCKDOWN')" style="border-color: var(--stark-cyan); color: var(--stark-cyan);">INITIATE LOCKDOWN</button>
                 <button class="action-btn" onclick="runCommand('SIREN')" style="border-color: var(--stark-red); color: var(--stark-red); background: rgba(255,0,76,0.1);">TRIGGER ALARM</button>
             </div>
-
             <div id="rs-terminal" class="cmd-terminal"></div>
         </div>
     </main>
@@ -120,7 +112,6 @@
     </main>
 
     <script>
-        // --- Smooth Sector Switching ---
         function switchSector(sectorId, btnElement) {
             const sectors = document.querySelectorAll('.sector');
             sectors.forEach(s => s.classList.remove('active'));
@@ -131,7 +122,6 @@
             window.scrollTo({ top: 250, behavior: 'smooth' });
         }
 
-        // --- Raksha-Suraksha Logic ---
         const terminal = document.getElementById('rs-terminal');
         let isRunning = false;
         function runCommand(cmdType) {
@@ -139,15 +129,10 @@
             isRunning = true;
             terminal.style.display = 'block';
             terminal.innerHTML = `> Establishing secure connection to target device...<br>`;
-            
             let cmdLines = [];
-            if (cmdType === 'LOCATE') {
-                cmdLines = ["> Bypassing location spoofing...", "> Triangulating coordinates...", "> <span style='color: #ffaa00;'>LAT: 13.1004° N, LONG: 77.3940° E (Nelamangala)</span>", "> Location packet saved to secure DB."];
-            } else if (cmdType === 'LOCKDOWN') {
-                cmdLines = ["> Pushing kernel-level lock command...", "> Overriding volume buttons...", "> Disabling power-off sequence...", "> <span style='color: var(--stark-cyan);'>DEVICE SECURELY LOCKED.</span>"];
-            } else if (cmdType === 'SIREN') {
-                cmdLines = ["> Bypassing silent/DND mode...", "> Routing audio output to maximum gain...", "> <span style='color: var(--stark-red);'>[!!!] KLAXON ENGAGED [!!!]</span>", "> Transmitting remote audio feed..."];
-            }
+            if (cmdType === 'LOCATE') cmdLines = ["> Bypassing location spoofing...", "> Triangulating coordinates...", "> <span style='color: #ffaa00;'>LAT: 13.1004° N, LONG: 77.3940° E (Nelamangala)</span>", "> Location packet saved to secure DB."];
+            else if (cmdType === 'LOCKDOWN') cmdLines = ["> Pushing kernel-level lock command...", "> Overriding volume buttons...", "> Disabling power-off sequence...", "> <span style='color: var(--stark-cyan);'>DEVICE SECURELY LOCKED.</span>"];
+            else if (cmdType === 'SIREN') cmdLines = ["> Bypassing silent/DND mode...", "> Routing audio output to maximum gain...", "> <span style='color: var(--stark-red);'>[!!!] KLAXON ENGAGED [!!!]</span>", "> Transmitting remote audio feed..."];
 
             let i = 0;
             function printLine() {
@@ -165,20 +150,17 @@
             setTimeout(printLine, 800);
         }
 
-        // --- LIVE GEMINI API ENGINE WITH VOICE & MIC ---
+        // --- UPGRADED DIAGNOSTIC API ENGINE ---
         const jarvisInput = document.getElementById('jarvis-input');
         const jarvisSend = document.getElementById('jarvis-send');
         const chatHistory = document.getElementById('chat-history');
         const jarvisConsole = document.getElementById('jarvis-console');
         const voiceToggleBtn = document.getElementById('voice-toggle');
         const micBtn = document.getElementById('mic-btn');
-        
         let voiceEnabled = false;
         
-        // YOUR LIVE API KEY 
         const GEMINI_API_KEY = "AIzaSyArAEJRgifcSt8zp8hMYoGvoVWcoijEGiE"; 
 
-        // Toggle Output Voice
         voiceToggleBtn.addEventListener('click', () => {
             voiceEnabled = !voiceEnabled;
             if (voiceEnabled) {
@@ -192,7 +174,6 @@
             }
         });
 
-        // TTS Engine (Speech output)
         function speak(text) {
             if (!voiceEnabled || !('speechSynthesis' in window)) return;
             window.speechSynthesis.cancel(); 
@@ -202,7 +183,6 @@
             window.speechSynthesis.speak(utterance);
         }
 
-        // Main AI Processing Function
         async function processJarvisCommand() {
             const cmd = jarvisInput.value.trim();
             if (!cmd) return;
@@ -232,9 +212,13 @@
                 });
 
                 const data = await response.json();
+
+                // DIAGNOSTIC CHECK: If Google sends an error instead of data
+                if (!response.ok) {
+                    throw new Error(data.error ? data.error.message : `HTTP Error ${response.status}`);
+                }
+
                 let aiText = data.candidates[0].content.parts[0].text;
-                
-                // Remove Markdown asterisks for clean UI
                 aiText = aiText.replace(/\*\*/g, '').replace(/\*/g, '');
 
                 document.getElementById(processingId).innerHTML = `<span style="color: #bb86fc;">J.A.R.V.I.S:</span> ${aiText}`;
@@ -243,8 +227,10 @@
 
             } catch (error) {
                 console.error("API Error:", error);
-                document.getElementById(processingId).innerHTML = `<span style="color: #ff004c;">J.A.R.V.I.S: Neural link failed. Network interference detected.</span>`;
-                speak("Neural link failed, sir.");
+                // THIS WILL PRINT THE EXACT REASON IT FAILED
+                document.getElementById(processingId).innerHTML = `<span style="color: #ff004c;">[DIAGNOSTIC ERROR]: ${error.message}</span>`;
+                jarvisConsole.scrollTop = jarvisConsole.scrollHeight;
+                speak("Neural link failed. Check terminal for diagnostic codes.");
             }
         }
 
@@ -253,32 +239,26 @@
             if (e.key === 'Enter') processJarvisCommand();
         });
 
-        // --- STT Engine (Microphone Input) ---
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
         if (SpeechRecognition) {
             const recognition = new SpeechRecognition();
             recognition.continuous = false;
             recognition.lang = 'en-US';
-
             micBtn.addEventListener('click', () => {
                 recognition.start();
                 micBtn.classList.add('mic-active');
                 jarvisInput.placeholder = "Listening...";
             });
-
             recognition.onresult = (event) => {
                 const transcript = event.results[0][0].transcript;
                 jarvisInput.value = transcript;
                 processJarvisCommand(); 
             };
-
             recognition.onspeechend = () => { recognition.stop(); };
-
             recognition.onend = () => {
                 micBtn.classList.remove('mic-active');
                 jarvisInput.placeholder = "Type or speak...";
             };
-
             recognition.onerror = (event) => {
                 micBtn.classList.remove('mic-active');
                 jarvisInput.placeholder = "Mic error. Please type.";
