@@ -14,11 +14,24 @@
         }
         .btn-group { display: grid; grid-template-columns: 1fr; gap: 10px; margin-top: 20px; }
         
-        /* Voice Toggle Animation */
+        /* Voice & Mic Animations */
         #voice-toggle.active {
             background: rgba(187, 134, 252, 0.2);
             box-shadow: inset 0 0 10px rgba(187, 134, 252, 0.5);
             color: #fff;
+        }
+        
+        @keyframes pulse-mic {
+            0% { box-shadow: 0 0 0 0 rgba(187, 134, 252, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(187, 134, 252, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(187, 134, 252, 0); }
+        }
+        
+        .mic-active {
+            background: rgba(187, 134, 252, 0.4) !important;
+            color: #fff !important;
+            animation: pulse-mic 1.5s infinite;
+            border-color: #fff !important;
         }
     </style>
 </head>
@@ -93,13 +106,14 @@
             <div id="jarvis-console" class="cmd-terminal" style="display: block; height: 220px; border-color: rgba(187, 134, 252, 0.4);">
                 <div id="chat-history">
                     > J.A.R.V.I.S. matrix fully initialized.<br>
-                    > Awaiting operator input...<br>
+                    > Awaiting operator input or voice command...<br>
                 </div>
             </div>
 
-            <div style="display: flex; gap: 10px; margin-top: 15px;">
-                <input type="text" id="jarvis-input" class="auth-input" style="margin-bottom: 0; letter-spacing: 1px; font-size: 0.9rem; text-align: left; padding: 10px; border-color: #bb86fc; color: #fff; flex-grow: 1;" placeholder="Type command...">
-                <button id="jarvis-send" class="action-btn" style="margin-top: 0; width: auto; padding: 0 20px; border-color: #bb86fc; color: #bb86fc;">SEND</button>
+            <div style="display: flex; gap: 8px; margin-top: 15px;">
+                <button id="mic-btn" class="action-btn" style="margin-top: 0; width: 50px; padding: 0; border-color: #bb86fc; color: #bb86fc; font-size: 1.2rem; flex-shrink: 0;">🎤</button>
+                <input type="text" id="jarvis-input" class="auth-input" style="margin-bottom: 0; letter-spacing: 1px; font-size: 0.9rem; text-align: left; padding: 10px; border-color: #bb86fc; color: #fff; flex-grow: 1;" placeholder="Type or speak...">
+                <button id="jarvis-send" class="action-btn" style="margin-top: 0; width: auto; padding: 0 15px; border-color: #bb86fc; color: #bb86fc;">SEND</button>
             </div>
         </div>
     </main>
@@ -115,14 +129,12 @@
             
             document.getElementById(sectorId).classList.add('active');
             btnElement.classList.add('active');
-            
             window.scrollTo({ top: 250, behavior: 'smooth' });
         }
 
         // --- Raksha-Suraksha Logic ---
         const terminal = document.getElementById('rs-terminal');
         let isRunning = false;
-
         function runCommand(cmdType) {
             if (isRunning) return; 
             isRunning = true;
@@ -130,28 +142,12 @@
             terminal.innerHTML = `> Establishing secure connection to target device...<br>`;
             
             let cmdLines = [];
-
             if (cmdType === 'LOCATE') {
-                cmdLines = [
-                    "> Bypassing location spoofing...",
-                    "> Triangulating coordinates...",
-                    "> <span style='color: #ffaa00;'>LAT: 13.1004° N, LONG: 77.3940° E (Nelamangala)</span>",
-                    "> Location packet saved to secure DB."
-                ];
+                cmdLines = ["> Bypassing location spoofing...", "> Triangulating coordinates...", "> <span style='color: #ffaa00;'>LAT: 13.1004° N, LONG: 77.3940° E (Nelamangala)</span>", "> Location packet saved to secure DB."];
             } else if (cmdType === 'LOCKDOWN') {
-                cmdLines = [
-                    "> Pushing kernel-level lock command...",
-                    "> Overriding volume buttons...",
-                    "> Disabling power-off sequence...",
-                    "> <span style='color: var(--stark-cyan);'>DEVICE SECURELY LOCKED.</span>"
-                ];
+                cmdLines = ["> Pushing kernel-level lock command...", "> Overriding volume buttons...", "> Disabling power-off sequence...", "> <span style='color: var(--stark-cyan);'>DEVICE SECURELY LOCKED.</span>"];
             } else if (cmdType === 'SIREN') {
-                cmdLines = [
-                    "> Bypassing silent/DND mode...",
-                    "> Routing audio output to maximum gain...",
-                    "> <span style='color: var(--stark-red);'>[!!!] KLAXON ENGAGED [!!!]</span>",
-                    "> Transmitting remote audio feed..."
-                ];
+                cmdLines = ["> Bypassing silent/DND mode...", "> Routing audio output to maximum gain...", "> <span style='color: var(--stark-red);'>[!!!] KLAXON ENGAGED [!!!]</span>", "> Transmitting remote audio feed..."];
             }
 
             let i = 0;
@@ -170,16 +166,17 @@
             setTimeout(printLine, 800);
         }
 
-        // --- FULL J.A.R.V.I.S. AI ENGINE WITH VOICE ---
+        // --- FULL J.A.R.V.I.S. AI ENGINE WITH MIC & VOICE ---
         const jarvisInput = document.getElementById('jarvis-input');
         const jarvisSend = document.getElementById('jarvis-send');
         const chatHistory = document.getElementById('chat-history');
         const jarvisConsole = document.getElementById('jarvis-console');
         const voiceToggleBtn = document.getElementById('voice-toggle');
+        const micBtn = document.getElementById('mic-btn');
         
         let voiceEnabled = false;
 
-        // Toggle Voice
+        // Toggle Output Voice
         voiceToggleBtn.addEventListener('click', () => {
             voiceEnabled = !voiceEnabled;
             if (voiceEnabled) {
@@ -193,19 +190,13 @@
             }
         });
 
-        // TTS Engine
+        // TTS Engine (Speech output)
         function speak(text) {
             if (!voiceEnabled || !('speechSynthesis' in window)) return;
             window.speechSynthesis.cancel(); 
             const utterance = new SpeechSynthesisUtterance(text);
-            utterance.pitch = 0.5; // Deep, robotic pitch
-            utterance.rate = 1.0;  // Normal speed
-            
-            // Attempt to find a British Male voice for maximum J.A.R.V.I.S. accuracy
-            const voices = window.speechSynthesis.getVoices();
-            const jarvisVoice = voices.find(v => v.lang === 'en-GB' || v.name.includes('Male'));
-            if (jarvisVoice) utterance.voice = jarvisVoice;
-
+            utterance.pitch = 0.5; 
+            utterance.rate = 1.0;  
             window.speechSynthesis.speak(utterance);
         }
 
@@ -225,18 +216,15 @@
             const cmd = jarvisInput.value.trim().toLowerCase();
             if (!cmd) return;
 
-            // Print User Command
             chatHistory.innerHTML += `<br><span style="color: #fff;">User:</span> ${cmd}<br>`;
             jarvisInput.value = '';
             jarvisConsole.scrollTop = jarvisConsole.scrollHeight;
 
-            // Clear Screen Logic
             if (cmd === 'clear') {
                 chatHistory.innerHTML = "> J.A.R.V.I.S. matrix fully initialized.<br>> Awaiting operator input...<br>";
                 return;
             }
 
-            // Determine Jarvis Response
             let response = "Command unrecognized, sir. Please specify valid Stark protocols. Try 'status', 'scan', 'protocols', or 'override'.";
             for (let key in aiResponses) {
                 if (cmd.includes(key)) {
@@ -245,26 +233,60 @@
                 }
             }
 
-            // Print Jarvis Processing Delay
             chatHistory.innerHTML += `<span style="color: #bb86fc;">J.A.R.V.I.S:</span> Processing...`;
             jarvisConsole.scrollTop = jarvisConsole.scrollHeight;
 
-            // Resolve actual response and speak
             setTimeout(() => {
                 chatHistory.innerHTML = chatHistory.innerHTML.replace(
                     `<span style="color: #bb86fc;">J.A.R.V.I.S:</span> Processing...`, 
                     `<span style="color: #bb86fc;">J.A.R.V.I.S:</span> ${response}`
                 );
                 jarvisConsole.scrollTop = jarvisConsole.scrollHeight;
-                speak(response); // Trigger speech synthesis
+                speak(response); 
             }, 600);
         }
 
-        // Trigger on button click or Enter key
         jarvisSend.addEventListener('click', processJarvisCommand);
         jarvisInput.addEventListener('keypress', function(e) {
             if (e.key === 'Enter') processJarvisCommand();
         });
+
+        // --- STT Engine (Microphone Input) ---
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        if (SpeechRecognition) {
+            const recognition = new SpeechRecognition();
+            recognition.continuous = false;
+            recognition.lang = 'en-US';
+
+            micBtn.addEventListener('click', () => {
+                recognition.start();
+                micBtn.classList.add('mic-active');
+                jarvisInput.placeholder = "Listening...";
+            });
+
+            recognition.onresult = (event) => {
+                const transcript = event.results[0][0].transcript;
+                jarvisInput.value = transcript;
+                processJarvisCommand(); // Auto-send when you finish speaking
+            };
+
+            recognition.onspeechend = () => {
+                recognition.stop();
+            };
+
+            recognition.onend = () => {
+                micBtn.classList.remove('mic-active');
+                jarvisInput.placeholder = "Type or speak...";
+            };
+
+            recognition.onerror = (event) => {
+                micBtn.classList.remove('mic-active');
+                jarvisInput.placeholder = "Mic error. Please type.";
+                console.log('Speech error: ' + event.error);
+            };
+        } else {
+            micBtn.style.display = "none"; // Hide mic if browser blocks it
+        }
     </script>
 </body>
 </html>
