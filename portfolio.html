@@ -98,14 +98,15 @@
         <div class="data-card" style="border-left-color: #bb86fc;">
             <div class="card-header" style="border-bottom-color: rgba(187, 134, 252, 0.4); margin-bottom: 5px;">
                 <h2 style="color: #bb86fc;">J.A.R.V.I.S. Terminal</h2>
-                <span class="status-badge" style="color: #bb86fc; border-color: #bb86fc; background: rgba(187, 134, 252, 0.1);">LISTENING</span>
+                <span class="status-badge" style="color: #bb86fc; border-color: #bb86fc; background: rgba(187, 134, 252, 0.1);">NEURAL LINK ACTIVE</span>
             </div>
             
             <button id="voice-toggle" class="action-btn" style="border-color: #bb86fc; color: #bb86fc; font-size: 0.75rem; padding: 8px; margin-top: 5px; margin-bottom: 15px;">VOICE OVERRIDE: OFF</button>
 
-            <div id="jarvis-console" class="cmd-terminal" style="display: block; height: 220px; border-color: rgba(187, 134, 252, 0.4);">
+            <div id="jarvis-console" class="cmd-terminal" style="display: block; height: 250px; border-color: rgba(187, 134, 252, 0.4);">
                 <div id="chat-history">
-                    > J.A.R.V.I.S. matrix fully initialized.<br>
+                    > J.A.R.V.I.S. neural matrix fully initialized.<br>
+                    > Connected to global API grid.<br>
                     > Awaiting operator input or voice command...<br>
                 </div>
             </div>
@@ -123,10 +124,8 @@
         function switchSector(sectorId, btnElement) {
             const sectors = document.querySelectorAll('.sector');
             sectors.forEach(s => s.classList.remove('active'));
-            
             const buttons = document.querySelectorAll('.nav-btn');
             buttons.forEach(b => b.classList.remove('active'));
-            
             document.getElementById(sectorId).classList.add('active');
             btnElement.classList.add('active');
             window.scrollTo({ top: 250, behavior: 'smooth' });
@@ -166,7 +165,7 @@
             setTimeout(printLine, 800);
         }
 
-        // --- FULL J.A.R.V.I.S. AI ENGINE WITH MIC & VOICE ---
+        // --- LIVE GEMINI API ENGINE WITH VOICE & MIC ---
         const jarvisInput = document.getElementById('jarvis-input');
         const jarvisSend = document.getElementById('jarvis-send');
         const chatHistory = document.getElementById('chat-history');
@@ -175,6 +174,9 @@
         const micBtn = document.getElementById('mic-btn');
         
         let voiceEnabled = false;
+        
+        // YOUR LIVE API KEY 
+        const GEMINI_API_KEY = "AIzaSyArAEJRgifcSt8zp8hMYoGvoVWcoijEGiE"; 
 
         // Toggle Output Voice
         voiceToggleBtn.addEventListener('click', () => {
@@ -200,50 +202,50 @@
             window.speechSynthesis.speak(utterance);
         }
 
-        // Jarvis Intelligence Database
-        const aiResponses = {
-            "status": "All systems nominal, sir. Encryption holds at AES-256. Mobile architecture is operating at 100% efficiency.",
-            "scan": "Scanning local grid... 2 authorized devices detected. No foreign intrusions on the Nelamangala subnet.",
-            "who am i": "You are Jack, a Full-Stack Mobile Architect and the supreme commander of this Master Control Node.",
-            "raksha": "Raksha-Suraksha anti-theft protocols are currently armed and actively monitoring your devices.",
-            "hello": "Greetings, Jack. The matrix is loaded. How may I assist with the architecture today?",
-            "protocols": "Current protocols available: status, scan network, raksha controls, and system lock.",
-            "override": "Override accepted. Full administrative privileges have been granted to Jack.",
-            "clear": "CLEAR_CMD"
-        };
-
-        function processJarvisCommand() {
-            const cmd = jarvisInput.value.trim().toLowerCase();
+        // Main AI Processing Function
+        async function processJarvisCommand() {
+            const cmd = jarvisInput.value.trim();
             if (!cmd) return;
 
             chatHistory.innerHTML += `<br><span style="color: #fff;">User:</span> ${cmd}<br>`;
             jarvisInput.value = '';
             jarvisConsole.scrollTop = jarvisConsole.scrollHeight;
 
-            if (cmd === 'clear') {
-                chatHistory.innerHTML = "> J.A.R.V.I.S. matrix fully initialized.<br>> Awaiting operator input...<br>";
+            if (cmd.toLowerCase() === 'clear') {
+                chatHistory.innerHTML = "> J.A.R.V.I.S. neural link initialized.<br>> Awaiting operator input...<br>";
                 return;
             }
 
-            let response = "Command unrecognized, sir. Please specify valid Stark protocols. Try 'status', 'scan', 'protocols', or 'override'.";
-            for (let key in aiResponses) {
-                if (cmd.includes(key)) {
-                    response = aiResponses[key];
-                    break;
-                }
-            }
-
-            chatHistory.innerHTML += `<span style="color: #bb86fc;">J.A.R.V.I.S:</span> Processing...`;
+            const processingId = "proc-" + Date.now();
+            chatHistory.innerHTML += `<span id="${processingId}" style="color: #bb86fc;">J.A.R.V.I.S: Contacting neural network...</span>`;
             jarvisConsole.scrollTop = jarvisConsole.scrollHeight;
 
-            setTimeout(() => {
-                chatHistory.innerHTML = chatHistory.innerHTML.replace(
-                    `<span style="color: #bb86fc;">J.A.R.V.I.S:</span> Processing...`, 
-                    `<span style="color: #bb86fc;">J.A.R.V.I.S:</span> ${response}`
-                );
+            const systemPrompt = `You are J.A.R.V.I.S., a highly advanced, intelligent, and slightly dry AI assistant created by a full-stack mobile architect named Jack. You operate his Master Control Node. Keep your answers concise, tactical, and futuristic (1 to 3 sentences max). Jack just said: "${cmd}"`;
+
+            try {
+                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        contents: [{ parts: [{ text: systemPrompt }] }]
+                    })
+                });
+
+                const data = await response.json();
+                let aiText = data.candidates[0].content.parts[0].text;
+                
+                // Remove Markdown asterisks for clean UI
+                aiText = aiText.replace(/\*\*/g, '').replace(/\*/g, '');
+
+                document.getElementById(processingId).innerHTML = `<span style="color: #bb86fc;">J.A.R.V.I.S:</span> ${aiText}`;
                 jarvisConsole.scrollTop = jarvisConsole.scrollHeight;
-                speak(response); 
-            }, 600);
+                speak(aiText);
+
+            } catch (error) {
+                console.error("API Error:", error);
+                document.getElementById(processingId).innerHTML = `<span style="color: #ff004c;">J.A.R.V.I.S: Neural link failed. Network interference detected.</span>`;
+                speak("Neural link failed, sir.");
+            }
         }
 
         jarvisSend.addEventListener('click', processJarvisCommand);
@@ -267,12 +269,10 @@
             recognition.onresult = (event) => {
                 const transcript = event.results[0][0].transcript;
                 jarvisInput.value = transcript;
-                processJarvisCommand(); // Auto-send when you finish speaking
+                processJarvisCommand(); 
             };
 
-            recognition.onspeechend = () => {
-                recognition.stop();
-            };
+            recognition.onspeechend = () => { recognition.stop(); };
 
             recognition.onend = () => {
                 micBtn.classList.remove('mic-active');
@@ -282,10 +282,9 @@
             recognition.onerror = (event) => {
                 micBtn.classList.remove('mic-active');
                 jarvisInput.placeholder = "Mic error. Please type.";
-                console.log('Speech error: ' + event.error);
             };
         } else {
-            micBtn.style.display = "none"; // Hide mic if browser blocks it
+            micBtn.style.display = "none";
         }
     </script>
 </body>
