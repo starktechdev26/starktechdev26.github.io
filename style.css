@@ -102,22 +102,22 @@ body {
 }
 
 .hero-title {
-    font-size: 3.5rem;
+    font-size: 3rem;
     font-weight: 800;
     line-height: 1.1;
     margin-bottom: 15px;
+    text-transform: uppercase;
 }
 
-/* Recreating that 3D split-color J from your image */
 .glitch-text {
     color: #fff;
     text-shadow: 3px 0 0 var(--stark-red), -3px 0 0 var(--stark-cyan);
 }
 
 .hero-subtitle {
-    font-family: 'Share Tech Mono', monospace; /* Keep a hint of tech */
+    font-family: 'Share Tech Mono', monospace; 
     color: var(--stark-cyan);
-    font-size: 1rem;
+    font-size: 0.95rem;
     letter-spacing: 2px;
     text-transform: uppercase;
     margin-bottom: 30px;
@@ -159,6 +159,7 @@ body {
     font-size: 1.4rem; 
     font-weight: 800;
     color: #fff;
+    text-transform: uppercase;
 }
 
 .status-badge {
@@ -170,6 +171,7 @@ body {
     padding: 4px 10px; 
     border-radius: 20px;
     margin-top: 10px;
+    border: 1px solid var(--stark-cyan);
 }
 
 .data-card p, .data-card li {
@@ -180,7 +182,7 @@ body {
 
 ul { list-style-type: none; }
 li { margin-bottom: 12px; position: relative; padding-left: 20px; }
-li::before { content: "•"; position: absolute; left: 0; color: var(--stark-cyan); font-weight: bold; }
+li::before { content: ">"; position: absolute; left: 0; color: var(--stark-cyan); font-weight: bold; font-family: 'Share Tech Mono'; }
 
 /* Premium Buttons */
 .action-btn {
@@ -190,7 +192,63 @@ li::before { content: "•"; position: absolute; left: 0; color: var(--stark-cya
     border: 1px solid var(--stark-cyan); border-radius: 8px;
     padding: 15px; margin-top: 15px;
     font-weight: 500; font-family: 'Poppins', sans-serif; letter-spacing: 1px;
-    transition: all 0.3s; cursor: pointer;
+    transition: all 0.3s; cursor: pointer; text-transform: uppercase;
 }
 
 .action-btn:active { background: var(--stark-cyan); color: var(--bg-dark); }
+
+/* --- SECURITY TERMINAL STYLES (Moved from HTML) --- */
+.boot-container {
+    display: flex; flex-direction: column; justify-content: center;
+    align-items: center; height: 100vh; padding: 20px; text-align: center;
+}
+
+.glass-terminal {
+    background: var(--glass-bg); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+    border: 1px solid var(--glass-border); border-radius: 20px; padding: 30px;
+    width: 100%; max-width: 400px; box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+    margin-top: 30px;
+}
+
+.auth-input {
+    width: 100%; background: rgba(0,0,0,0.3); border: 1px solid var(--stark-cyan);
+    color: var(--stark-cyan); padding: 15px; font-family: 'Share Tech Mono', monospace;
+    font-size: 1.2rem; text-align: center; border-radius: 8px; outline: none;
+    margin-bottom: 20px; letter-spacing: 5px; transition: box-shadow 0.3s;
+}
+
+.auth-input:focus { box-shadow: 0 0 15px rgba(0, 243, 255, 0.3); }
+
+#jarvis-output {
+    font-family: 'Share Tech Mono', monospace; color: var(--stark-cyan);
+    font-size: 1.1rem; line-height: 1.6; text-align: left; height: 150px; overflow-y: hidden;
+}
+
+.cursor { font-family: 'Share Tech Mono', monospace; color: var(--stark-cyan); animation: blink 1s infinite; }
+
+.cmd-terminal {
+    display: none; 
+    margin-top: 15px; 
+    font-family: 'Share Tech Mono', monospace; 
+    font-size: 0.85rem; 
+    color: var(--stark-cyan); 
+    line-height: 1.6; 
+    background: rgba(0,0,0,0.6); 
+    padding: 15px; 
+    border-radius: 10px;
+    border: 1px solid rgba(0, 243, 255, 0.2);
+    height: 150px;
+    overflow-y: auto;
+}
+
+.cmd-terminal::-webkit-scrollbar { width: 5px; }
+.cmd-terminal::-webkit-scrollbar-thumb { background: var(--stark-cyan); border-radius: 5px; }
+
+.btn-group {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+@keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
