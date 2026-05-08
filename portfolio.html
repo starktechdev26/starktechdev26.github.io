@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>STARK | Master Node</title>
+    <title>Jack | Stark OS</title>
     <link rel="stylesheet" href="style.css">
     <style>
         .cmd-terminal {
@@ -23,11 +23,21 @@
             70% { box-shadow: 0 0 0 10px rgba(187, 134, 252, 0); }
             100% { box-shadow: 0 0 0 0 rgba(187, 134, 252, 0); }
         }
-        
         .mic-active {
             background: rgba(187, 134, 252, 0.4) !important; color: #fff !important;
             animation: pulse-mic 1.5s infinite; border-color: #fff !important;
         }
+
+        /* Mobile Scrollable Nav */
+        .stark-nav {
+            overflow-x: auto; white-space: nowrap; justify-content: flex-start; gap: 15px; padding: 15px 20px;
+        }
+        .stark-nav::-webkit-scrollbar { display: none; }
+        .nav-btn { flex-shrink: 0; }
+        
+        /* Chatbot Markdown Styles */
+        .task-output { color: #fff; font-family: 'Poppins', sans-serif; font-size: 0.9rem; }
+        .task-output pre { background: #111; padding: 10px; border-radius: 5px; overflow-x: auto; margin: 10px 0; color: var(--stark-cyan); border: 1px solid #333; font-family: 'Share Tech Mono', monospace;}
     </style>
 </head>
 <body>
@@ -35,48 +45,59 @@
     <div class="energy-field-2"></div>
 
     <nav class="stark-nav">
-        <button class="nav-btn active" onclick="switchSector('sect-system', this)">SYSTEM</button>
-        <button class="nav-btn" onclick="switchSector('sect-security', this)">SECURITY</button>
-        <button class="nav-btn" onclick="switchSector('sect-ai', this)">A.I. CORE</button>
+        <button class="nav-btn active" onclick="switchSector('sect-portfolio', this)">PORTFOLIO</button>
+        <button class="nav-btn" onclick="switchSector('sect-projects', this)">PROJECTS</button>
+        <button class="nav-btn" onclick="switchSector('sect-assistant', this)">ASSISTANT</button>
+        <button class="nav-btn" onclick="switchSector('sect-chatbot', this)">CHATBOT</button>
     </nav>
     
     <header class="hero-section">
         <h1 class="hero-title">WELCOME BACK,<br><span class="glitch-text">J</span>ACK.</h1>
-        <div class="hero-subtitle">Master Control Node: ONLINE</div>
+        <div class="hero-subtitle">Mark V Operating System: ONLINE</div>
     </header>
 
-    <main id="sect-system" class="sector active dashboard">
+    <main id="sect-portfolio" class="sector active dashboard">
         <div class="data-card">
             <div class="card-header">
-                <h2>Network Status</h2>
-                <span class="status-badge" style="color: #00ff00; border-color: #00ff00; background: rgba(0, 255, 0, 0.1);">SECURE</span>
+                <h2>Background</h2>
+                <span class="status-badge">Final Semester BCA</span>
+            </div>
+            <p>Based in Bangalore, specializing in mobile-first architecture, database management, and advanced personal security application development.</p>
+        </div>
+
+        <div class="data-card">
+            <div class="card-header">
+                <h2>Core Tech Stack</h2>
+                <span class="status-badge">Verified</span>
             </div>
             <ul>
-                <li><strong>Local Grid:</strong> Bangalore, India</li>
-                <li><strong>Uplink:</strong> Active (GitHub Pages)</li>
-                <li><strong>Encryption:</strong> AES-256 Enabled</li>
+                <li>Full-Stack Web Architecture</li>
+                <li>Python & Advanced Database Management</li>
+                <li>Mobile Application Security Integration</li>
+                <li>Cyber Law & Intellectual Property Rights</li>
             </ul>
         </div>
+        
         <div class="data-card">
             <div class="card-header">
-                <h2>Hardware Matrix</h2>
-                <span class="status-badge">SYNCED</span>
+                <h2>Comm-Link</h2>
+                <span class="status-badge" style="color: #ffaa00; border-color: #ffaa00; background: rgba(255, 170, 0, 0.1);">Ready for Deployment</span>
             </div>
-            <ul>
-                <li><strong>Device 1:</strong> Samsung Galaxy A07 5G (Primary)</li>
-                <li><strong>Device 2:</strong> Redmi Y3 (Dev Node)</li>
-                <li><strong>Storage Path:</strong> /AppInternalStorage/project/</li>
-            </ul>
+            <p>Targeting short-term technical deployment and internships in the Bangalore Tech Grid.</p>
+            <div class="contact-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                <button id="copy-email-btn" class="action-btn" style="font-size: 0.8rem;">Email Me</button>
+                <a href="https://github.com/starktechdev26" target="_blank" class="action-btn" style="font-size: 0.8rem;">GitHub</a>
+            </div>
         </div>
     </main>
 
-    <main id="sect-security" class="sector dashboard">
+    <main id="sect-projects" class="sector dashboard">
         <div class="data-card" style="border-left-color: var(--stark-red);">
             <div class="card-header" style="border-bottom-color: rgba(255, 0, 76, 0.4);">
                 <h2 style="color: var(--stark-red);">Raksha-Suraksha</h2>
-                <span class="status-badge" style="color: var(--stark-red); border-color: var(--stark-red); background: rgba(255, 0, 76, 0.1);">ARMED</span>
+                <span class="status-badge" style="color: var(--stark-red); border-color: var(--stark-red); background: rgba(255, 0, 76, 0.1);">ACTIVE</span>
             </div>
-            <p>Anti-Theft Protocol monitoring active. Select a command to push via the global network to connected devices.</p>
+            <p>Advanced anti-theft protocol. Select a command to push via the global network to connected devices.</p>
             <div class="btn-group">
                 <button class="action-btn" onclick="runCommand('LOCATE')" style="border-color: #ffaa00; color: #ffaa00;">FORCE GPS PING</button>
                 <button class="action-btn" onclick="runCommand('LOCKDOWN')" style="border-color: var(--stark-cyan); color: var(--stark-cyan);">INITIATE LOCKDOWN</button>
@@ -84,30 +105,56 @@
             </div>
             <div id="rs-terminal" class="cmd-terminal"></div>
         </div>
+        <div class="data-card">
+            <div class="card-header">
+                <h2>Hardware Matrix</h2>
+                <span class="status-badge">SYNCED</span>
+            </div>
+            <ul>
+                <li><strong>Device 1:</strong> Samsung Galaxy A07 5G</li>
+                <li><strong>Device 2:</strong> Redmi Y3</li>
+                <li><strong>Storage:</strong> /AppInternalStorage/project/</li>
+            </ul>
+        </div>
     </main>
 
-    <main id="sect-ai" class="sector dashboard">
+    <main id="sect-assistant" class="sector dashboard">
         <div class="data-card" style="border-left-color: #bb86fc;">
             <div class="card-header" style="border-bottom-color: rgba(187, 134, 252, 0.4); margin-bottom: 5px;">
-                <h2 style="color: #bb86fc;">J.A.R.V.I.S. Terminal</h2>
-                <span class="status-badge" style="color: #bb86fc; border-color: #bb86fc; background: rgba(187, 134, 252, 0.1);">NEURAL LINK ACTIVE</span>
+                <h2 style="color: #bb86fc;">Assistant Terminal</h2>
+                <span class="status-badge" style="color: #bb86fc; border-color: #bb86fc; background: rgba(187, 134, 252, 0.1);">SENSORY MATRIX</span>
             </div>
-            
             <button id="voice-toggle" class="action-btn" style="border-color: #bb86fc; color: #bb86fc; font-size: 0.75rem; padding: 8px; margin-top: 5px; margin-bottom: 15px;">VOICE OVERRIDE: OFF</button>
-
             <div id="jarvis-console" class="cmd-terminal" style="display: block; height: 250px; border-color: rgba(187, 134, 252, 0.4);">
                 <div id="chat-history"></div>
             </div>
-
             <div style="display: flex; gap: 8px; margin-top: 15px;">
                 <button id="mic-btn" class="action-btn" style="margin-top: 0; width: 50px; padding: 0; border-color: #bb86fc; color: #bb86fc; font-size: 1.2rem; flex-shrink: 0;">🎤</button>
-                <input type="password" id="jarvis-input" class="auth-input" style="margin-bottom: 0; letter-spacing: 1px; font-size: 0.9rem; text-align: left; padding: 10px; border-color: #bb86fc; color: #fff; flex-grow: 1;" placeholder="Type or speak...">
+                <input type="password" id="jarvis-input" class="auth-input" style="margin-bottom: 0; letter-spacing: 1px; font-size: 0.9rem; text-align: left; padding: 10px; border-color: #bb86fc; color: #fff; flex-grow: 1;" placeholder="Vault locked...">
                 <button id="jarvis-send" class="action-btn" style="margin-top: 0; width: auto; padding: 0 15px; border-color: #bb86fc; color: #bb86fc;">SEND</button>
             </div>
         </div>
     </main>
 
+    <main id="sect-chatbot" class="sector dashboard">
+        <div class="data-card" style="border-left-color: #00ffaa;">
+            <div class="card-header" style="border-bottom-color: rgba(0, 255, 170, 0.4); margin-bottom: 5px;">
+                <h2 style="color: #00ffaa;">Task Generator</h2>
+                <span class="status-badge" style="color: #00ffaa; border-color: #00ffaa; background: rgba(0, 255, 170, 0.1);">DEEP THINKING LOGIC</span>
+            </div>
+            <p style="font-size: 0.8rem; margin-bottom: 15px;">Dedicated processor for generating code, architecture plans, and complex problem solving.</p>
+            <div id="task-console" class="cmd-terminal task-output" style="display: block; height: 350px; border-color: rgba(0, 255, 170, 0.4); font-family: 'Poppins', sans-serif;">
+                <div id="task-history"></div>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
+                <textarea id="task-input" class="auth-input" style="height: 80px; margin-bottom: 0; font-family: 'Poppins', sans-serif; letter-spacing: normal; font-size: 0.9rem; text-align: left; border-color: #00ffaa; color: #fff;" placeholder="Describe your task, architecture, or code requirements..."></textarea>
+                <button id="task-send" class="action-btn" style="margin-top: 0; border-color: #00ffaa; color: #00ffaa;">EXECUTE TASK</button>
+            </div>
+        </div>
+    </main>
+
     <script>
+        // --- 1. UI Navigation & Comm-Link ---
         function switchSector(sectorId, btnElement) {
             const sectors = document.querySelectorAll('.sector');
             sectors.forEach(s => s.classList.remove('active'));
@@ -115,12 +162,41 @@
             buttons.forEach(b => b.classList.remove('active'));
             document.getElementById(sectorId).classList.add('active');
             btnElement.classList.add('active');
-            window.scrollTo({ top: 250, behavior: 'smooth' });
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
+        document.getElementById("copy-email-btn").addEventListener("click", function() {
+            navigator.clipboard.writeText("jayaskumardev26@gmail.com").then(() => {
+                this.innerText = "Copied!"; this.style.background = "var(--stark-cyan)"; this.style.color = "#000";
+                setTimeout(() => { this.innerText = "Email Me"; this.style.background = "transparent"; this.style.color = "var(--stark-cyan)"; }, 2000);
+            });
+        });
+
+        // --- 2. Security Vault Check ---
+        let GEMINI_API_KEY = localStorage.getItem('stark_master_key'); 
+        const chatHistory = document.getElementById('chat-history');
+        const taskHistory = document.getElementById('task-history');
+        const jarvisInput = document.getElementById('jarvis-input');
+        const taskInput = document.getElementById('task-input');
+
+        function bootVault() {
+            if (!GEMINI_API_KEY) {
+                chatHistory.innerHTML = `> <span style="color: #ff004c;">WARNING: Vault locked.</span><br>> Paste your Gemini API key below to unlock Assistant & Chatbot.<br>`;
+                taskHistory.innerHTML = `<span style="color: #ff004c;">Hardware Vault is locked. Enter key in the Assistant tab to proceed.</span><br>`;
+                jarvisInput.type = "password"; 
+                taskInput.disabled = true;
+            } else {
+                chatHistory.innerHTML = `> <span style="color: #00ff00;">Hardware Vault unlocked.</span><br>> Assistant Matrix fully initialized.<br>> Awaiting command...<br>`;
+                taskHistory.innerHTML = `<span style="color: #00ffaa;">Task Generator initialized. Connected to gemini-2.5-flash.</span><br><br>`;
+                jarvisInput.type = "text"; jarvisInput.placeholder = "Type or speak...";
+                taskInput.disabled = false;
+            }
+        }
+        bootVault();
+
+        // --- 3. Raksha-Suraksha GPS Logic ---
         const terminal = document.getElementById('rs-terminal');
         let isRunning = false;
-        
         function runCommand(cmdType) {
             if (isRunning) return; 
             isRunning = true;
@@ -129,215 +205,127 @@
             if (cmdType === 'LOCATE') {
                 terminal.innerHTML += `> Booting physical GPS module...<br>`;
                 terminal.scrollTop = terminal.scrollHeight;
-
                 if (navigator.geolocation) {
                     navigator.geolocation.getCurrentPosition(
                         async (position) => {
-                            const lat = position.coords.latitude.toFixed(5);
-                            const lon = position.coords.longitude.toFixed(5);
-                            
-                            terminal.innerHTML += `> <span style='color: #00ff00;'>HARDWARE SATELLITE LOCK ACQUIRED.</span><br>`;
-                            terminal.innerHTML += `> <span style='color: #ffaa00;'>LAT: ${lat}° N, LONG: ${lon}° E</span><br>`;
-                            terminal.scrollTop = terminal.scrollHeight;
-
+                            const lat = position.coords.latitude.toFixed(5), lon = position.coords.longitude.toFixed(5);
+                            terminal.innerHTML += `> <span style='color: #00ff00;'>SATELLITE LOCK ACQUIRED.</span><br>> <span style='color: #ffaa00;'>LAT: ${lat}° N, LONG: ${lon}° E</span><br>`;
                             try {
-                                terminal.innerHTML += `> Fetching atmospheric data...<br>`;
-                                const weatherKey = '4a419d02a0583e9615b26e155eb54126';
-                                const weatherRes = await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${weatherKey}&units=metric`);
-                                const weatherData = await weatherRes.json();
-                                
+                                const weatherRes = await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=4a419d02a0583e9615b26e155eb54126&units=metric`);
                                 if (weatherRes.ok) {
-                                    const temp = weatherData.main.temp;
-                                    const desc = weatherData.weather[0].description;
-                                    const city = weatherData.name;
-                                    terminal.innerHTML += `> <span style='color: var(--stark-cyan);'>ATMOSPHERE (${city}): ${temp}°C, ${desc.toUpperCase()}</span><br>`;
+                                    const data = await weatherRes.json();
+                                    terminal.innerHTML += `> <span style='color: var(--stark-cyan);'>ATMOSPHERE (${data.name}): ${data.main.temp}°C, ${data.weather[0].description.toUpperCase()}</span><br>`;
                                 }
                             } catch(e) {}
-
-                            terminal.innerHTML += `> Location packet saved to secure DB.<br><br>`;
-                            terminal.scrollTop = terminal.scrollHeight;
-                            isRunning = false;
+                            terminal.innerHTML += `> Location packet saved.<br><br>`; terminal.scrollTop = terminal.scrollHeight; isRunning = false;
                         },
-                        (error) => {
-                            terminal.innerHTML += `> <span style='color: #ff004c;'>[ERROR] GPS Chip access denied.</span><br><br>`;
-                            isRunning = false;
-                        },
+                        (error) => { terminal.innerHTML += `> <span style='color: #ff004c;'>[ERROR] GPS Chip denied.</span><br><br>`; isRunning = false; },
                         { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
                     );
                 }
                 return; 
             }
-            
             terminal.innerHTML += `> Establishing secure connection to target device...<br>`;
-            let cmdLines = [];
-            if (cmdType === 'LOCKDOWN') cmdLines = ["> Pushing kernel-level lock command...", "> DEVICE SECURELY LOCKED."];
-            else if (cmdType === 'SIREN') cmdLines = ["> Routing audio output to maximum gain...", "> <span style='color: var(--stark-red);'>[!!!] KLAXON ENGAGED [!!!]</span>"];
-
+            let cmdLines = cmdType === 'LOCKDOWN' ? ["> Overriding volume buttons...", "> <span style='color: var(--stark-cyan);'>DEVICE SECURELY LOCKED.</span>"] : ["> Routing audio to max gain...", "> <span style='color: var(--stark-red);'>[!!!] KLAXON ENGAGED [!!!]</span>"];
             let i = 0;
             function printLine() {
-                if (i < cmdLines.length) {
-                    terminal.innerHTML += cmdLines[i] + "<br>";
-                    terminal.scrollTop = terminal.scrollHeight;
-                    i++;
-                    setTimeout(printLine, 600); 
-                } else {
-                    isRunning = false;
-                }
+                if (i < cmdLines.length) { terminal.innerHTML += cmdLines[i] + "<br>"; terminal.scrollTop = terminal.scrollHeight; i++; setTimeout(printLine, 600); } 
+                else { isRunning = false; }
             }
             setTimeout(printLine, 800);
         }
 
-        // --- UPGRADED SENSORY AI ENGINE ---
-        const jarvisInput = document.getElementById('jarvis-input');
-        const jarvisSend = document.getElementById('jarvis-send');
-        const chatHistory = document.getElementById('chat-history');
-        const jarvisConsole = document.getElementById('jarvis-console');
-        const voiceToggleBtn = document.getElementById('voice-toggle');
-        const micBtn = document.getElementById('mic-btn');
+        // --- 4. Assistant Matrix (Voice/Sensory) ---
         let voiceEnabled = false;
-        
-        let GEMINI_API_KEY = localStorage.getItem('stark_master_key'); 
-
-        if (!GEMINI_API_KEY) {
-            chatHistory.innerHTML = `> <span style="color: #ff004c;">WARNING: API Key missing.</span><br>> Please paste your new Gemini API key below and press SEND to lock it into local hardware.<br>`;
-            jarvisInput.type = "password"; 
-        } else {
-            chatHistory.innerHTML = `> <span style="color: #00ff00;">Hardware Vault unlocked.</span><br>> J.A.R.V.I.S. neural matrix fully initialized.<br>> Awaiting operator input...<br>`;
-            jarvisInput.type = "text";
-        }
-
+        const voiceToggleBtn = document.getElementById('voice-toggle');
         voiceToggleBtn.addEventListener('click', () => {
             voiceEnabled = !voiceEnabled;
-            if (voiceEnabled) {
-                voiceToggleBtn.innerText = "VOICE OVERRIDE: ON";
-                voiceToggleBtn.classList.add('active');
-                speak("Voice synthesis matrix online.");
-            } else {
-                voiceToggleBtn.innerText = "VOICE OVERRIDE: OFF";
-                voiceToggleBtn.classList.remove('active');
-                window.speechSynthesis.cancel();
-            }
+            voiceEnabled ? (voiceToggleBtn.innerText = "VOICE OVERRIDE: ON", voiceToggleBtn.classList.add('active'), speak("Voice synthesis online.")) : (voiceToggleBtn.innerText = "VOICE OVERRIDE: OFF", voiceToggleBtn.classList.remove('active'), window.speechSynthesis.cancel());
         });
-
         function speak(text) {
             if (!voiceEnabled || !('speechSynthesis' in window)) return;
             window.speechSynthesis.cancel(); 
-            const utterance = new SpeechSynthesisUtterance(text);
-            utterance.pitch = 0.5; 
-            utterance.rate = 1.0;  
+            const utterance = new SpeechSynthesisUtterance(text); utterance.pitch = 0.5; utterance.rate = 1.0;  
             window.speechSynthesis.speak(utterance);
         }
 
-        async function processJarvisCommand() {
-            const cmd = jarvisInput.value.trim();
-            if (!cmd) return;
-
-            if (!GEMINI_API_KEY) {
-                GEMINI_API_KEY = cmd;
-                localStorage.setItem('stark_master_key', GEMINI_API_KEY);
-                jarvisInput.value = '';
-                jarvisInput.type = "text";
-                chatHistory.innerHTML += `<br>> <span style="color: #00ff00;">[SECURITY] Key securely vaulted.</span><br>> Neural link ready. Say Hello.<br>`;
-                return;
-            }
-
-            chatHistory.innerHTML += `<br><span style="color: #fff;">User:</span> ${cmd}<br>`;
-            jarvisInput.value = '';
-            jarvisConsole.scrollTop = jarvisConsole.scrollHeight;
-
-            if (cmd.toLowerCase() === 'reset key') {
-                localStorage.removeItem('stark_master_key');
-                GEMINI_API_KEY = null;
-                chatHistory.innerHTML += `> <span style="color: #ffaa00;">API Key purged. Matrix offline.</span><br>`;
-                jarvisInput.type = "password";
-                return;
-            }
-
-            const processingId = "proc-" + Date.now();
-            let systemPrompt = `You are J.A.R.V.I.S., a highly advanced AI created by full-stack mobile architect Jack. You operate his Master Control Node. Keep your answers concise, tactical, and futuristic (1 to 2 sentences). Jack just said: "${cmd}"`;
-
-            // THE SENSORY OVERRIDE: Checking if you asked about location/weather
-            const lowerCmd = cmd.toLowerCase();
-            if (lowerCmd.includes('weather') || lowerCmd.includes('location') || lowerCmd.includes('where')) {
-                chatHistory.innerHTML += `<span id="${processingId}" style="color: #bb86fc;">J.A.R.V.I.S: Accessing physical GPS chip and atmospheric sensors...</span>`;
-                jarvisConsole.scrollTop = jarvisConsole.scrollHeight;
-
-                try {
-                    // Force the physical GPS chip
-                    const pos = await new Promise((resolve, reject) => {
-                        navigator.geolocation.getCurrentPosition(resolve, reject, { enableHighAccuracy: true, timeout: 10000 });
-                    });
-                    const lat = pos.coords.latitude.toFixed(5);
-                    const lon = pos.coords.longitude.toFixed(5);
-                    
-                    // Fetch real weather
-                    const weatherKey = '4a419d02a0583e9615b26e155eb54126';
-                    const weatherRes = await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${weatherKey}&units=metric`);
-                    const weatherData = await weatherRes.json();
-                    
-                    const temp = weatherData.main.temp;
-                    const desc = weatherData.weather[0].description;
-                    const city = weatherData.name;
-
-                    // INJECT REAL DATA INTO HIS BRAIN
-                    systemPrompt = `You are J.A.R.V.I.S. Jack asked: "${cmd}". You just scanned the hardware sensors. Tell Jack his REAL location is ${city} (Lat: ${lat}, Lon: ${lon}) and the REAL weather is ${temp}°C with ${desc}. Speak like a tactical AI.`;
-                    
-                } catch (e) {
-                    systemPrompt = `You are J.A.R.V.I.S. Jack asked: "${cmd}". Tell him the hardware GPS chip is currently offline or permission was denied, so you cannot fetch physical location data right now.`;
-                }
-                document.getElementById(processingId).innerHTML = `<span style="color: #bb86fc;">J.A.R.V.I.S: Contacting neural network...</span>`;
-            } else {
-                chatHistory.innerHTML += `<span id="${processingId}" style="color: #bb86fc;">J.A.R.V.I.S: Contacting neural network...</span>`;
-            }
-
-            jarvisConsole.scrollTop = jarvisConsole.scrollHeight;
-
-            try {
-                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        contents: [{ parts: [{ text: systemPrompt }] }]
-                    })
-                });
-
-                const data = await response.json();
-
-                if (!response.ok) throw new Error(data.error ? data.error.message : `HTTP Error`);
-
-                let aiText = data.candidates[0].content.parts[0].text;
-                aiText = aiText.replace(/\*\*/g, '').replace(/\*/g, '');
-
-                document.getElementById(processingId).innerHTML = `<span style="color: #bb86fc;">J.A.R.V.I.S:</span> ${aiText}`;
-                jarvisConsole.scrollTop = jarvisConsole.scrollHeight;
-                speak(aiText);
-
-            } catch (error) {
-                document.getElementById(processingId).innerHTML = `<span style="color: #ff004c;">[ERROR]: Connection failed.</span>`;
-                jarvisConsole.scrollTop = jarvisConsole.scrollHeight;
-            }
+        async function fetchGemini(prompt) {
+            const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`, {
+                method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+            });
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.error ? data.error.message : `HTTP Error`);
+            return data.candidates[0].content.parts[0].text;
         }
 
-        jarvisSend.addEventListener('click', processJarvisCommand);
-        jarvisInput.addEventListener('keypress', function(e) { if (e.key === 'Enter') processJarvisCommand(); });
+        async function processJarvisCommand() {
+            const cmd = jarvisInput.value.trim(); if (!cmd) return;
+            if (!GEMINI_API_KEY) {
+                GEMINI_API_KEY = cmd; localStorage.setItem('stark_master_key', GEMINI_API_KEY);
+                jarvisInput.value = ''; bootVault(); return;
+            }
+            chatHistory.innerHTML += `<br><span style="color: #fff;">User:</span> ${cmd}<br>`;
+            jarvisInput.value = ''; document.getElementById('jarvis-console').scrollTop = document.getElementById('jarvis-console').scrollHeight;
+
+            if (cmd.toLowerCase() === 'reset key') { localStorage.removeItem('stark_master_key'); GEMINI_API_KEY = null; bootVault(); return; }
+
+            const processingId = "proc-" + Date.now();
+            let systemPrompt = `You are J.A.R.V.I.S., a highly advanced AI created by Jack. Keep answers tactical and short (1-2 sentences). Jack said: "${cmd}"`;
+
+            if (cmd.toLowerCase().includes('weather') || cmd.toLowerCase().includes('location')) {
+                chatHistory.innerHTML += `<span id="${processingId}" style="color: #bb86fc;">J.A.R.V.I.S: Accessing physical sensors...</span>`;
+                try {
+                    const pos = await new Promise((res, rej) => navigator.geolocation.getCurrentPosition(res, rej, { enableHighAccuracy: true, timeout: 10000 }));
+                    const lat = pos.coords.latitude.toFixed(5), lon = pos.coords.longitude.toFixed(5);
+                    const weatherData = await (await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=4a419d02a0583e9615b26e155eb54126&units=metric`)).json();
+                    systemPrompt = `You are J.A.R.V.I.S. Tell Jack his REAL location is ${weatherData.name} and weather is ${weatherData.main.temp}°C with ${weatherData.weather[0].description}. Speak like a tactical AI. Jack asked: "${cmd}"`;
+                } catch(e) { systemPrompt = `You are J.A.R.V.I.S. Tell Jack the hardware GPS chip is offline so you cannot check location.`; }
+            } else {
+                chatHistory.innerHTML += `<span id="${processingId}" style="color: #bb86fc;">J.A.R.V.I.S: Thinking...</span>`;
+            }
+
+            try {
+                let text = await fetchGemini(systemPrompt); text = text.replace(/\*\*/g, '').replace(/\*/g, '');
+                document.getElementById(processingId).innerHTML = `<span style="color: #bb86fc;">J.A.R.V.I.S:</span> ${text}`;
+                speak(text);
+            } catch (err) { document.getElementById(processingId).innerHTML = `<span style="color: #ff004c;">[ERROR]: Connection failed.</span>`; }
+            document.getElementById('jarvis-console').scrollTop = document.getElementById('jarvis-console').scrollHeight;
+        }
+        document.getElementById('jarvis-send').addEventListener('click', processJarvisCommand);
+        jarvisInput.addEventListener('keypress', e => { if (e.key === 'Enter') processJarvisCommand(); });
 
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
         if (SpeechRecognition) {
-            const recognition = new SpeechRecognition();
-            recognition.continuous = false;
-            recognition.lang = 'en-US';
-            micBtn.addEventListener('click', () => {
-                recognition.start();
-                micBtn.classList.add('mic-active');
-                jarvisInput.placeholder = "Listening...";
-            });
-            recognition.onresult = (event) => {
-                jarvisInput.value = event.results[0][0].transcript;
-                processJarvisCommand(); 
-            };
+            const recognition = new SpeechRecognition(); recognition.continuous = false; recognition.lang = 'en-US';
+            const micBtn = document.getElementById('mic-btn');
+            micBtn.addEventListener('click', () => { recognition.start(); micBtn.classList.add('mic-active'); jarvisInput.placeholder = "Listening..."; });
+            recognition.onresult = (e) => { jarvisInput.value = e.results[0][0].transcript; processJarvisCommand(); };
             recognition.onend = () => { micBtn.classList.remove('mic-active'); jarvisInput.placeholder = "Type or speak..."; };
-            recognition.onerror = () => { micBtn.classList.remove('mic-active'); };
-        } else { micBtn.style.display = "none"; }
+        } else { document.getElementById('mic-btn').style.display = "none"; }
+
+        // --- 5. Task Chatbot (Heavy Lifting) ---
+        async function processTaskCommand() {
+            const cmd = taskInput.value.trim(); if (!cmd || !GEMINI_API_KEY) return;
+            taskHistory.innerHTML += `<div style="margin-bottom: 15px;"><strong style="color: #00ffaa;">User:</strong><br>${cmd}</div>`;
+            taskInput.value = ''; document.getElementById('task-console').scrollTop = document.getElementById('task-console').scrollHeight;
+
+            const processingId = "task-" + Date.now();
+            taskHistory.innerHTML += `<div id="${processingId}" style="color: #888;">Generating complex response...</div>`;
+            document.getElementById('task-console').scrollTop = document.getElementById('task-console').scrollHeight;
+
+            const taskPrompt = `You are an expert AI software engineer and architect assisting Jack. Provide complete, detailed, and formatted answers. Use code blocks where appropriate. Jack asks: ${cmd}`;
+
+            try {
+                let text = await fetchGemini(taskPrompt);
+                // Simple markdown parsing for code blocks in UI
+                text = text.replace(/```(.*?)```/gs, '<pre>$1</pre>').replace(/\n/g, '<br>');
+                document.getElementById(processingId).innerHTML = `<strong style="color: #00ffaa;">System:</strong><br>${text}<br><br><hr style="border-color:#333; margin: 15px 0;">`;
+            } catch (err) {
+                document.getElementById(processingId).innerHTML = `<span style="color: #ff004c;">[ERROR]: Task generation failed. Check API key.</span><br><br>`;
+            }
+            document.getElementById('task-console').scrollTop = document.getElementById('task-console').scrollHeight;
+        }
+        document.getElementById('task-send').addEventListener('click', processTaskCommand);
     </script>
 </body>
 </html>
