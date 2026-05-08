@@ -3,98 +3,104 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jack | Stark Industries System</title>
+    <title>Jack | Stark Tech</title>
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <style>
+        /* Extra styles specifically for the premium boot screen */
+        .boot-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            padding: 20px;
+            text-align: center;
+        }
+        .glass-terminal {
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 30px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+            text-align: left;
+            margin-top: 30px;
+            height: 250px;
+            overflow-y: hidden;
+        }
+        #jarvis-output {
+            font-family: 'Share Tech Mono', monospace;
+            color: var(--stark-cyan);
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+        .cursor {
+            font-family: 'Share Tech Mono', monospace;
+            color: var(--stark-cyan);
+            animation: blink 1s infinite;
+        }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+    </style>
 </head>
 <body>
-  
-    <div id="boot-screen" class="boot-screen">
-        <button id="init-btn" class="init-btn">INITIALIZE SYSTEM</button>
-    </div>
+    <div class="energy-field"></div>
+    <div class="energy-field-2"></div>
 
-    <div class="hologram-grid"></div>
-    
-    <div class="hud-container">
-        <header class="hud-header">
-            <h1 class="stark-logo">STARK <span>TECH</span></h1>
-            <div class="system-status">SYS: <span class="online">ONLINE</span></div>
-        </header>
-
-        <main class="terminal-box">
-            <div id="jarvis-output"></div>
-            <span class="cursor">_</span>
-        </main>
+    <div class="boot-container">
+        <h1 class="hero-title" style="margin-bottom: 0;">STARK <span class="glitch-text">TECH</span></h1>
         
-        <div class="arc-reactor">
-            <div class="reactor-ring outer-ring"></div>
-            <div class="reactor-ring coil-ring"></div>
-            <div class="reactor-ring inner-ring"></div>
-            <div class="reactor-core"></div>
+        <button id="init-btn" class="action-btn" style="max-width: 250px; margin-top: 40px;">INITIALIZE SYSTEM</button>
+        
+        <div id="terminal-wrapper" class="glass-terminal" style="display: none;">
+            <div id="jarvis-output"></div><span class="cursor">_</span>
         </div>
     </div>
 
     <script>
         const outputDiv = document.getElementById("jarvis-output");
-        const terminalBox = document.querySelector(".terminal-box");
-        const bootScreen = document.getElementById("boot-screen");
+        const terminalWrapper = document.getElementById("terminal-wrapper");
         const initBtn = document.getElementById("init-btn");
 
         const bootSequence = [
-            "J.A.R.V.I.S. SYSTEM ONLINE.",
-            "Bypassing mainframe...",
-            "Accessing Full-Stack Developer profiles...",
-            "Loading protocols for Jack...",
-            "Welcome, sir. All systems are operating at 100% capacity.",
-            "Redirecting to secure database..."
+            "Initializing secure uplink...",
+            "Bypassing standard grid protocols...",
+            "Loading premium glassmorphism UI...",
+            "Authenticating Operator: Jack...",
+            "Welcome, sir. Mark IV is online.",
+            "Routing to dashboard..."
         ];
 
         let lineIndex = 0;
         let charIndex = 0;
 
-        // Safe Voice Function
-        function speakLine(text) {
-            try {
-                if ('speechSynthesis' in window) {
-                    window.speechSynthesis.cancel();
-                    const utterance = new SpeechSynthesisUtterance(text);
-                    utterance.pitch = 0.9;
-                    utterance.rate = 0.9;
-                    window.speechSynthesis.speak(utterance);
-                }
-            } catch (e) {
-                console.log("Voice blocked by browser, continuing visual sequence.");
-            }
-        }
-
         function typeWriter() {
             if (lineIndex < bootSequence.length) {
-                if (charIndex === 0) { speakLine(bootSequence[lineIndex]); }
-
                 if (charIndex < bootSequence[lineIndex].length) {
                     outputDiv.innerHTML += bootSequence[lineIndex].charAt(charIndex);
                     charIndex++;
-                    terminalBox.scrollTop = terminalBox.scrollHeight;
-                    setTimeout(typeWriter, 50); 
+                    terminalWrapper.scrollTop = terminalWrapper.scrollHeight;
+                    setTimeout(typeWriter, 15); // Fast typing
                 } else {
                     outputDiv.innerHTML += "<br><br>";
                     lineIndex++;
                     charIndex = 0;
-                    terminalBox.scrollTop = terminalBox.scrollHeight;
-                    setTimeout(typeWriter, 1200); 
+                    terminalWrapper.scrollTop = terminalWrapper.scrollHeight;
+                    setTimeout(typeWriter, 400); // Pause between lines
                 }
             } else {
-                // Redirect to the newly named Mark III OS
                 setTimeout(() => {
                     window.location.href = "portfolio.html"; 
-                }, 2000); 
+                }, 600); 
             }
         }
 
-        // Engage System
         initBtn.addEventListener("click", () => {
-            bootScreen.style.display = "none";
-            setTimeout(typeWriter, 500);
+            initBtn.style.display = "none";
+            terminalWrapper.style.display = "block";
+            setTimeout(typeWriter, 400);
         });
     </script>
 </body>
