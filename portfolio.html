@@ -3,91 +3,103 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jack | Full-Stack Architect</title>
+    <title>STARK | Master Node</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        /* Terminal Styling for Command Outputs */
+        .cmd-terminal {
+            display: none; 
+            margin-top: 15px; 
+            font-family: 'Share Tech Mono', monospace; 
+            font-size: 0.85rem; 
+            color: var(--stark-cyan); 
+            line-height: 1.6; 
+            background: rgba(0,0,0,0.6); 
+            padding: 15px; 
+            border-radius: 10px;
+            border: 1px solid rgba(0, 243, 255, 0.2);
+            height: 150px;
+            overflow-y: auto;
+        }
+        .btn-group {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            margin-top: 20px;
+        }
+    </style>
 </head>
 <body>
     <div class="energy-field"></div>
     <div class="energy-field-2"></div>
 
     <nav class="stark-nav">
-        <button class="nav-btn active" onclick="switchSector('sect-personal', this)">Profile</button>
-        <button class="nav-btn" onclick="switchSector('sect-protocols', this)">Work</button>
-        <button class="nav-btn" onclick="switchSector('sect-gemini', this)">AI Co-Op</button>
+        <button class="nav-btn active" onclick="switchSector('sect-system', this)">SYSTEM</button>
+        <button class="nav-btn" onclick="switchSector('sect-security', this)">SECURITY</button>
+        <button class="nav-btn" onclick="switchSector('sect-ai', this)">A.I. CORE</button>
     </nav>
     
     <header class="hero-section">
-        <h1 class="hero-title">Hi,<br>I'm <span class="glitch-text">J</span>ack,</h1>
-        <div class="hero-subtitle">Full-Stack Mobile Architect</div>
+        <h1 class="hero-title">WELCOME BACK,<br><span class="glitch-text">J</span>ACK.</h1>
+        <div class="hero-subtitle">Master Control Node: ONLINE</div>
     </header>
 
-    <main id="sect-personal" class="sector active dashboard">
+    <main id="sect-system" class="sector active dashboard">
         <div class="data-card">
             <div class="card-header">
-                <h2>Background</h2>
-                <span class="status-badge">Final Semester BCA</span>
-            </div>
-            <p>Based in Bangalore, specializing in mobile-first architecture, database management, and advanced personal security application development.</p>
-        </div>
-
-        <div class="data-card">
-            <div class="card-header">
-                <h2>Core Tech Stack</h2>
-                <span class="status-badge">Verified</span>
+                <h2>Network Status</h2>
+                <span class="status-badge" style="color: #00ff00; border-color: #00ff00; background: rgba(0, 255, 0, 0.1);">SECURE</span>
             </div>
             <ul>
-                <li>Full-Stack Web Architecture</li>
-                <li>Python & Advanced Database Management</li>
-                <li>Mobile Application Security Integration</li>
-                <li>Cyber Law & Intellectual Property Rights</li>
+                <li><strong>Local Grid:</strong> Bangalore, India</li>
+                <li><strong>Uplink:</strong> Active (GitHub Pages)</li>
+                <li><strong>Encryption:</strong> AES-256 Enabled</li>
             </ul>
         </div>
-        
+
         <div class="data-card">
             <div class="card-header">
-                <h2>Comm-Link</h2>
-                <span class="status-badge" style="color: #ffaa00; border-color: #ffaa00;">Ready for Deployment</span>
+                <h2>Hardware Matrix</h2>
+                <span class="status-badge">SYNCED</span>
             </div>
-            <p>Targeting short-term technical deployment and internships in the Bangalore Tech Grid by May 15, 2026.</p>
-            <div class="contact-grid">
-                <button id="copy-email-btn" class="action-btn">Email Me</button>
-                <a href="https://github.com/starktechdev26" target="_blank" class="action-btn">GitHub</a>
-            </div>
+            <ul>
+                <li><strong>Device 1:</strong> Samsung Galaxy A07 5G (Primary)</li>
+                <li><strong>Device 2:</strong> Redmi Y3 (Dev Node)</li>
+                <li><strong>Storage Path:</strong> /AppInternalStorage/project/</li>
+            </ul>
         </div>
     </main>
 
-    <main id="sect-protocols" class="sector dashboard">
-        <div class="data-card">
-            <div class="card-header">
-                <h2>Raksha-Suraksha</h2>
-                <span class="status-badge">Active Development</span>
+    <main id="sect-security" class="sector dashboard">
+        <div class="data-card" style="border-left-color: var(--stark-red);">
+            <div class="card-header" style="border-bottom-color: rgba(255, 0, 76, 0.4);">
+                <h2 style="color: var(--stark-red);">Raksha-Suraksha</h2>
+                <span class="status-badge" style="color: var(--stark-red); border-color: var(--stark-red); background: rgba(255, 0, 76, 0.1);">ARMED</span>
             </div>
-            <p>Advanced personal security application architecture designed for maximum device protection. Codebase hosted directly on local internal storage for rapid mobile iteration.</p>
+            <p>Anti-Theft Protocol monitoring active. Select a command to push via the global network to connected devices.</p>
             
-            <button class="action-btn" id="run-scan-btn">Initialize Security Demo</button>
-            <div id="scan-terminal" style="display: none; margin-top: 15px; font-family: 'Share Tech Mono', monospace; font-size: 0.8rem; color: var(--stark-cyan); line-height: 1.5;"></div>
-        </div>
-
-        <div class="data-card">
-            <div class="card-header">
-                <h2>J.A.R.V.I.S. Comms</h2>
-                <span class="status-badge">Compiled</span>
+            <div class="btn-group">
+                <button class="action-btn" onclick="runCommand('LOCATE')" style="border-color: #ffaa00; color: #ffaa00;">FORCE GPS PING</button>
+                <button class="action-btn" onclick="runCommand('LOCKDOWN')" style="border-color: var(--stark-cyan); color: var(--stark-cyan);">INITIATE LOCKDOWN</button>
+                <button class="action-btn" onclick="runCommand('SIREN')" style="border-color: var(--stark-red); color: var(--stark-red); background: rgba(255,0,76,0.1);">TRIGGER ALARM</button>
             </div>
-            <p>An Iron Man-inspired interactive fan chat and voice assistant protocol. Built to process full system scans and execute conversational logic with Stark-grade responsiveness.</p>
+
+            <div id="rs-terminal" class="cmd-terminal"></div>
         </div>
     </main>
 
-    <main id="sect-gemini" class="sector dashboard">
-        <div class="data-card">
-            <div class="card-header">
-                <h2>The Development Matrix</h2>
-                <span class="status-badge">Gemini Interface Online</span>
+    <main id="sect-ai" class="sector dashboard">
+        <div class="data-card" style="border-left-color: #bb86fc;">
+            <div class="card-header" style="border-bottom-color: rgba(187, 134, 252, 0.4);">
+                <h2 style="color: #bb86fc;">J.A.R.V.I.S. Interface</h2>
+                <span class="status-badge" style="color: #bb86fc; border-color: #bb86fc; background: rgba(187, 134, 252, 0.1);">LISTENING</span>
             </div>
-            <p>This entire portfolio operating system was pair-programmed and deployed purely through a mobile IDE (Acode) environment, utilizing an advanced human-AI symbiotic workflow.</p>
+            <p>Voice-assistant protocols compiled and idling. Awaiting voice trigger commands.</p>
             <br>
             <ul>
-                <li><strong>Mobile SPA:</strong> Built a glassmorphism Single Page Application without external frameworks.</li>
-                <li><strong>Responsive Cyber-UI:</strong> Designed complex CSS rendering optimized for mobile GPUs.</li>
+                <li><strong>Backend:</strong> Gemini AI Co-Op</li>
+                <li><strong>Status:</strong> Mark IV UI Fully Deployed</li>
+                <li><strong>Directives:</strong> Maintain system architecture, monitor security feeds.</li>
             </ul>
         </div>
     </main>
@@ -104,60 +116,59 @@
             document.getElementById(sectorId).classList.add('active');
             btnElement.classList.add('active');
             
-            // Scroll back to top of content smoothly
             window.scrollTo({ top: 250, behavior: 'smooth' });
         }
 
-        // Copy Comm-Link Logic
-        document.getElementById("copy-email-btn").addEventListener("click", function() {
-            const email = "jayaskumardev26@gmail.com";
-            navigator.clipboard.writeText(email).then(() => {
-                const btn = document.getElementById("copy-email-btn");
-                btn.innerText = "Copied to Clipboard!";
-                btn.style.color = "#fff"; 
-                btn.style.background = "var(--stark-cyan)";
-                
-                setTimeout(() => {
-                    btn.innerText = "Email Me";
-                    btn.style.color = "var(--stark-cyan)";
-                    btn.style.background = "transparent";
-                }, 3000);
-            }).catch(err => {
-                alert("Comm-Link Address: " + email);
-            });
-        });
+        // Raksha-Suraksha Command Execution Logic
+        const terminal = document.getElementById('rs-terminal');
+        let isRunning = false;
 
-        // Raksha-Suraksha Terminal Animation Logic
-        document.getElementById('run-scan-btn').addEventListener('click', function() {
-            const terminal = document.getElementById('scan-terminal');
-            const btn = this;
+        function runCommand(cmdType) {
+            if (isRunning) return; // Prevent overlapping commands
+            isRunning = true;
             terminal.style.display = 'block';
-            terminal.innerHTML = '';
-            btn.style.display = 'none';
+            terminal.innerHTML = `> Establishing secure connection to target device...<br>`;
+            
+            let cmdLines = [];
 
-            const scanLines = [
-                "> Booting security protocols...",
-                "> Simulating unauthorized access...",
-                "> Lock screen bypass [BLOCKED]",
-                "> Intruder detected. Alarm matrix active.",
-                "> Device Secured."
-            ];
+            if (cmdType === 'LOCATE') {
+                cmdLines = [
+                    "> Bypassing location spoofing...",
+                    "> Triangulating coordinates...",
+                    "> <span style='color: #ffaa00;'>LAT: 13.1004° N, LONG: 77.3940° E (Nelamangala)</span>",
+                    "> Location packet saved to secure DB."
+                ];
+            } else if (cmdType === 'LOCKDOWN') {
+                cmdLines = [
+                    "> Pushing kernel-level lock command...",
+                    "> Overriding volume buttons...",
+                    "> Disabling power-off sequence...",
+                    "> <span style='color: var(--stark-cyan);'>DEVICE SECURELY LOCKED.</span>"
+                ];
+            } else if (cmdType === 'SIREN') {
+                cmdLines = [
+                    "> Bypassing silent/DND mode...",
+                    "> Routing audio output to maximum gain...",
+                    "> <span style='color: var(--stark-red);'>[!!!] KLAXON ENGAGED [!!!]</span>",
+                    "> Transmitting remote audio feed..."
+                ];
+            }
 
             let i = 0;
             function printLine() {
-                if (i < scanLines.length) {
-                    terminal.innerHTML += scanLines[i] + "<br>";
+                if (i < cmdLines.length) {
+                    terminal.innerHTML += cmdLines[i] + "<br>";
+                    terminal.scrollTop = terminal.scrollHeight;
                     i++;
-                    setTimeout(printLine, 800); 
+                    setTimeout(printLine, 600); 
                 } else {
-                    setTimeout(() => {
-                        btn.style.display = 'block';
-                        btn.innerText = "Reboot Demo";
-                    }, 1000);
+                    terminal.innerHTML += "> <span style='color: #888;'>Awaiting next command...</span><br><br>";
+                    terminal.scrollTop = terminal.scrollHeight;
+                    isRunning = false;
                 }
             }
-            printLine();
-        });
+            setTimeout(printLine, 800);
+        }
     </script>
 </body>
 </html>
