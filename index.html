@@ -3,45 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jack | Stark Tech</title>
+    <title>STARK | Master Control</title>
     <link rel="stylesheet" href="style.css">
     <style>
-        /* Extra styles specifically for the premium boot screen */
         .boot-container {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            padding: 20px;
-            text-align: center;
+            display: flex; flex-direction: column; justify-content: center;
+            align-items: center; height: 100vh; padding: 20px; text-align: center;
         }
         .glass-terminal {
-            background: var(--glass-bg);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            border: 1px solid var(--glass-border);
-            border-radius: 20px;
-            padding: 30px;
-            width: 100%;
-            max-width: 400px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
-            text-align: left;
+            background: var(--glass-bg); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border); border-radius: 20px; padding: 30px;
+            width: 100%; max-width: 400px; box-shadow: 0 15px 35px rgba(0,0,0,0.5);
             margin-top: 30px;
-            height: 250px;
-            overflow-y: hidden;
         }
+        .auth-input {
+            width: 100%; background: rgba(0,0,0,0.3); border: 1px solid var(--stark-cyan);
+            color: var(--stark-cyan); padding: 15px; font-family: 'Share Tech Mono', monospace;
+            font-size: 1.2rem; text-align: center; border-radius: 8px; outline: none;
+            margin-bottom: 20px; letter-spacing: 5px;
+        }
+        .auth-input:focus { box-shadow: 0 0 15px rgba(0, 243, 255, 0.3); }
+        
         #jarvis-output {
-            font-family: 'Share Tech Mono', monospace;
-            color: var(--stark-cyan);
-            font-size: 1.1rem;
-            line-height: 1.6;
+            font-family: 'Share Tech Mono', monospace; color: var(--stark-cyan);
+            font-size: 1.1rem; line-height: 1.6; text-align: left; height: 150px; overflow-y: hidden;
         }
-        .cursor {
-            font-family: 'Share Tech Mono', monospace;
-            color: var(--stark-cyan);
-            animation: blink 1s infinite;
-        }
+        .cursor { font-family: 'Share Tech Mono', monospace; color: var(--stark-cyan); animation: blink 1s infinite; }
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
     </style>
 </head>
@@ -50,9 +37,14 @@
     <div class="energy-field-2"></div>
 
     <div class="boot-container">
-        <h1 class="hero-title" style="margin-bottom: 0;">STARK <span class="glitch-text">TECH</span></h1>
+        <h1 class="hero-title" style="margin-bottom: 0;">MASTER <span class="glitch-text">NODE</span></h1>
         
-        <button id="init-btn" class="action-btn" style="max-width: 250px; margin-top: 40px;">INITIALIZE SYSTEM</button>
+        <div id="login-gate" class="glass-terminal">
+            <p style="color: #aaa; font-family: 'Share Tech Mono', monospace; margin-bottom: 15px;">AWAITING OPERATOR CLEARANCE</p>
+            <input type="password" id="master-pass" class="auth-input" placeholder="****" maxlength="8">
+            <button id="verify-btn" class="action-btn">DECRYPT GRID</button>
+            <p id="error-msg" style="color: var(--stark-red); font-family: 'Share Tech Mono'; margin-top: 15px; display: none;">[ ACCESS DENIED ]</p>
+        </div>
         
         <div id="terminal-wrapper" class="glass-terminal" style="display: none;">
             <div id="jarvis-output"></div><span class="cursor">_</span>
@@ -60,17 +52,20 @@
     </div>
 
     <script>
-        const outputDiv = document.getElementById("jarvis-output");
+        const loginGate = document.getElementById("login-gate");
+        const passInput = document.getElementById("master-pass");
+        const verifyBtn = document.getElementById("verify-btn");
+        const errorMsg = document.getElementById("error-msg");
+        
         const terminalWrapper = document.getElementById("terminal-wrapper");
-        const initBtn = document.getElementById("init-btn");
+        const outputDiv = document.getElementById("jarvis-output");
 
         const bootSequence = [
-            "Initializing secure uplink...",
-            "Bypassing standard grid protocols...",
-            "Loading premium glassmorphism UI...",
-            "Authenticating Operator: Jack...",
-            "Welcome, sir. Mark IV is online.",
-            "Routing to dashboard..."
+            "Passcode accepted.",
+            "Decrypting master grid...",
+            "Loading Raksha-Suraksha overrides...",
+            "Loading J.A.R.V.I.S. modules...",
+            "Welcome back, Jack. You have full control."
         ];
 
         let lineIndex = 0;
@@ -82,13 +77,13 @@
                     outputDiv.innerHTML += bootSequence[lineIndex].charAt(charIndex);
                     charIndex++;
                     terminalWrapper.scrollTop = terminalWrapper.scrollHeight;
-                    setTimeout(typeWriter, 15); // Fast typing
+                    setTimeout(typeWriter, 15); 
                 } else {
                     outputDiv.innerHTML += "<br><br>";
                     lineIndex++;
                     charIndex = 0;
                     terminalWrapper.scrollTop = terminalWrapper.scrollHeight;
-                    setTimeout(typeWriter, 400); // Pause between lines
+                    setTimeout(typeWriter, 400); 
                 }
             } else {
                 setTimeout(() => {
@@ -97,10 +92,23 @@
             }
         }
 
-        initBtn.addEventListener("click", () => {
-            initBtn.style.display = "none";
-            terminalWrapper.style.display = "block";
-            setTimeout(typeWriter, 400);
+        // Authentication Logic
+        verifyBtn.addEventListener("click", () => {
+            const code = passInput.value;
+            // Set your secret master password here
+            if (code === "2026") {
+                loginGate.style.display = "none";
+                terminalWrapper.style.display = "block";
+                setTimeout(typeWriter, 400);
+            } else {
+                errorMsg.style.display = "block";
+                passInput.value = "";
+                passInput.style.borderColor = "var(--stark-red)";
+                setTimeout(() => {
+                    errorMsg.style.display = "none";
+                    passInput.style.borderColor = "var(--stark-cyan)";
+                }, 2000);
+            }
         });
     </script>
 </body>
