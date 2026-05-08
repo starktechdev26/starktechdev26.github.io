@@ -5,29 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>STARK | Master Node</title>
     <link rel="stylesheet" href="style.css">
-    <style>
-        /* Terminal Styling for Command Outputs */
-        .cmd-terminal {
-            display: none; 
-            margin-top: 15px; 
-            font-family: 'Share Tech Mono', monospace; 
-            font-size: 0.85rem; 
-            color: var(--stark-cyan); 
-            line-height: 1.6; 
-            background: rgba(0,0,0,0.6); 
-            padding: 15px; 
-            border-radius: 10px;
-            border: 1px solid rgba(0, 243, 255, 0.2);
-            height: 150px;
-            overflow-y: auto;
-        }
-        .btn-group {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 10px;
-            margin-top: 20px;
-        }
-    </style>
 </head>
 <body>
     <div class="energy-field"></div>
@@ -91,21 +68,26 @@
     <main id="sect-ai" class="sector dashboard">
         <div class="data-card" style="border-left-color: #bb86fc;">
             <div class="card-header" style="border-bottom-color: rgba(187, 134, 252, 0.4);">
-                <h2 style="color: #bb86fc;">J.A.R.V.I.S. Interface</h2>
+                <h2 style="color: #bb86fc;">J.A.R.V.I.S. Terminal</h2>
                 <span class="status-badge" style="color: #bb86fc; border-color: #bb86fc; background: rgba(187, 134, 252, 0.1);">LISTENING</span>
             </div>
-            <p>Voice-assistant protocols compiled and idling. Awaiting voice trigger commands.</p>
-            <br>
-            <ul>
-                <li><strong>Backend:</strong> Gemini AI Co-Op</li>
-                <li><strong>Status:</strong> Mark IV UI Fully Deployed</li>
-                <li><strong>Directives:</strong> Maintain system architecture, monitor security feeds.</li>
-            </ul>
+            
+            <div id="jarvis-console" class="cmd-terminal" style="display: block; height: 200px; border-color: rgba(187, 134, 252, 0.4);">
+                <div id="chat-history">
+                    > J.A.R.V.I.S. System initialized.<br>
+                    > Awaiting operator input...<br>
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 10px; margin-top: 15px;">
+                <input type="text" id="jarvis-input" class="auth-input" style="margin-bottom: 0; letter-spacing: 1px; font-size: 0.9rem; text-align: left; padding: 10px; border-color: #bb86fc; color: #fff;" placeholder="Type command...">
+                <button id="jarvis-send" class="action-btn" style="margin-top: 0; width: auto; padding: 0 20px; border-color: #bb86fc; color: #bb86fc;">SEND</button>
+            </div>
         </div>
     </main>
 
     <script>
-        // Smooth Sector Switching
+        // --- Smooth Sector Switching ---
         function switchSector(sectorId, btnElement) {
             const sectors = document.querySelectorAll('.sector');
             sectors.forEach(s => s.classList.remove('active'));
@@ -119,12 +101,12 @@
             window.scrollTo({ top: 250, behavior: 'smooth' });
         }
 
-        // Raksha-Suraksha Command Execution Logic
+        // --- Raksha-Suraksha Command Execution Logic ---
         const terminal = document.getElementById('rs-terminal');
         let isRunning = false;
 
         function runCommand(cmdType) {
-            if (isRunning) return; // Prevent overlapping commands
+            if (isRunning) return; 
             isRunning = true;
             terminal.style.display = 'block';
             terminal.innerHTML = `> Establishing secure connection to target device...<br>`;
@@ -169,6 +151,66 @@
             }
             setTimeout(printLine, 800);
         }
+
+        // --- J.A.R.V.I.S. Chat Engine ---
+        const jarvisInput = document.getElementById('jarvis-input');
+        const jarvisSend = document.getElementById('jarvis-send');
+        const chatHistory = document.getElementById('chat-history');
+        const jarvisConsole = document.getElementById('jarvis-console');
+
+        // Jarvis Intelligence Database
+        const aiResponses = {
+            "status": "All systems nominal, sir. Encryption holds at AES-256. Mobile architecture is operating at 100% efficiency.",
+            "scan": "Scanning local grid... 2 authorized devices detected. No foreign intrusions on the Nelamangala subnet.",
+            "who am i": "You are Jack, a Full-Stack Mobile Architect and creator of this Master Control Node.",
+            "raksha": "Raksha-Suraksha anti-theft protocols are currently armed and monitoring your devices.",
+            "hello": "Greetings, Jack. How may I assist with the architecture today?",
+            "clear": "CLEAR_CMD"
+        };
+
+        function processJarvisCommand() {
+            const cmd = jarvisInput.value.trim().toLowerCase();
+            if (!cmd) return;
+
+            // Print User Command
+            chatHistory.innerHTML += `<br><span style="color: #fff;">User:</span> ${cmd}<br>`;
+            jarvisInput.value = '';
+            jarvisConsole.scrollTop = jarvisConsole.scrollHeight;
+
+            // Clear Screen Logic
+            if (cmd === 'clear') {
+                chatHistory.innerHTML = "> J.A.R.V.I.S. System initialized.<br>> Awaiting operator input...<br>";
+                return;
+            }
+
+            // Determine Jarvis Response
+            let response = "Command unrecognized. Please specify valid Stark protocols. Try 'status', 'scan', or 'clear'.";
+            for (let key in aiResponses) {
+                if (cmd.includes(key)) {
+                    response = aiResponses[key];
+                    break;
+                }
+            }
+
+            // Print Jarvis Processing Delay
+            chatHistory.innerHTML += `<span style="color: #bb86fc;">J.A.R.V.I.S:</span> Processing...`;
+            jarvisConsole.scrollTop = jarvisConsole.scrollHeight;
+
+            // Resolve actual response after a short delay
+            setTimeout(() => {
+                chatHistory.innerHTML = chatHistory.innerHTML.replace(
+                    `<span style="color: #bb86fc;">J.A.R.V.I.S:</span> Processing...`, 
+                    `<span style="color: #bb86fc;">J.A.R.V.I.S:</span> ${response}`
+                );
+                jarvisConsole.scrollTop = jarvisConsole.scrollHeight;
+            }, 800);
+        }
+
+        // Trigger on button click or Enter key
+        jarvisSend.addEventListener('click', processJarvisCommand);
+        jarvisInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') processJarvisCommand();
+        });
     </script>
 </body>
 </html>
