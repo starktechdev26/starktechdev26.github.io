@@ -96,8 +96,7 @@
             <button id="voice-toggle" class="action-btn" style="border-color: #bb86fc; color: #bb86fc; font-size: 0.75rem; padding: 8px; margin-top: 5px; margin-bottom: 15px;">VOICE OVERRIDE: OFF</button>
 
             <div id="jarvis-console" class="cmd-terminal" style="display: block; height: 250px; border-color: rgba(187, 134, 252, 0.4);">
-                <div id="chat-history">
-                    </div>
+                <div id="chat-history"></div>
             </div>
 
             <div style="display: flex; gap: 8px; margin-top: 15px;">
@@ -119,7 +118,6 @@
             window.scrollTo({ top: 250, behavior: 'smooth' });
         }
 
-        // --- GPS HARDWARE & WEATHER API LOGIC ---
         const terminal = document.getElementById('rs-terminal');
         let isRunning = false;
         
@@ -130,7 +128,6 @@
             
             if (cmdType === 'LOCATE') {
                 terminal.innerHTML += `> Booting physical GPS module...<br>`;
-                terminal.innerHTML += `> Bypassing network estimates...<br>`;
                 terminal.scrollTop = terminal.scrollHeight;
 
                 if (navigator.geolocation) {
@@ -138,16 +135,13 @@
                         async (position) => {
                             const lat = position.coords.latitude.toFixed(5);
                             const lon = position.coords.longitude.toFixed(5);
-                            const acc = position.coords.accuracy.toFixed(1);
                             
                             terminal.innerHTML += `> <span style='color: #00ff00;'>HARDWARE SATELLITE LOCK ACQUIRED.</span><br>`;
                             terminal.innerHTML += `> <span style='color: #ffaa00;'>LAT: ${lat}° N, LONG: ${lon}° E</span><br>`;
-                            terminal.innerHTML += `> <span style='color: #888;'>Accuracy Variance: ±${acc} meters</span><br>`;
                             terminal.scrollTop = terminal.scrollHeight;
 
-                            // Tactical Weather Integration
                             try {
-                                terminal.innerHTML += `> Fetching atmospheric data from grid...<br>`;
+                                terminal.innerHTML += `> Fetching atmospheric data...<br>`;
                                 const weatherKey = '4a419d02a0583e9615b26e155eb54126';
                                 const weatherRes = await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${weatherKey}&units=metric`);
                                 const weatherData = await weatherRes.json();
@@ -157,36 +151,27 @@
                                     const desc = weatherData.weather[0].description;
                                     const city = weatherData.name;
                                     terminal.innerHTML += `> <span style='color: var(--stark-cyan);'>ATMOSPHERE (${city}): ${temp}°C, ${desc.toUpperCase()}</span><br>`;
-                                } else {
-                                    terminal.innerHTML += `> <span style='color: #ffaa00;'>[WEATHER API] Offline or Invalid Key.</span><br>`;
                                 }
-                            } catch(e) {
-                                terminal.innerHTML += `> <span style='color: #ffaa00;'>[WEATHER API] Connection failed.</span><br>`;
-                            }
+                            } catch(e) {}
 
                             terminal.innerHTML += `> Location packet saved to secure DB.<br><br>`;
                             terminal.scrollTop = terminal.scrollHeight;
                             isRunning = false;
                         },
                         (error) => {
-                            terminal.innerHTML += `> <span style='color: #ff004c;'>[ERROR] GPS Chip access denied or offline: ${error.message}</span><br><br>`;
-                            terminal.scrollTop = terminal.scrollHeight;
+                            terminal.innerHTML += `> <span style='color: #ff004c;'>[ERROR] GPS Chip access denied.</span><br><br>`;
                             isRunning = false;
                         },
                         { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
                     );
-                } else {
-                    terminal.innerHTML += `> <span style='color: #ff004c;'>[ERROR] Hardware GPS not supported.</span><br><br>`;
-                    isRunning = false;
                 }
                 return; 
             }
             
-            // Standard Commands
             terminal.innerHTML += `> Establishing secure connection to target device...<br>`;
             let cmdLines = [];
-            if (cmdType === 'LOCKDOWN') cmdLines = ["> Pushing kernel-level lock command...", "> Overriding volume buttons...", "> Disabling power-off sequence...", "> <span style='color: var(--stark-cyan);'>DEVICE SECURELY LOCKED.</span>"];
-            else if (cmdType === 'SIREN') cmdLines = ["> Bypassing silent/DND mode...", "> Routing audio output to maximum gain...", "> <span style='color: var(--stark-red);'>[!!!] KLAXON ENGAGED [!!!]</span>", "> Transmitting remote audio feed..."];
+            if (cmdType === 'LOCKDOWN') cmdLines = ["> Pushing kernel-level lock command...", "> DEVICE SECURELY LOCKED."];
+            else if (cmdType === 'SIREN') cmdLines = ["> Routing audio output to maximum gain...", "> <span style='color: var(--stark-red);'>[!!!] KLAXON ENGAGED [!!!]</span>"];
 
             let i = 0;
             function printLine() {
@@ -196,15 +181,13 @@
                     i++;
                     setTimeout(printLine, 600); 
                 } else {
-                    terminal.innerHTML += "> <span style='color: #888;'>Awaiting next command...</span><br><br>";
-                    terminal.scrollTop = terminal.scrollHeight;
                     isRunning = false;
                 }
             }
             setTimeout(printLine, 800);
         }
 
-        // --- SECURE HARDWARE VAULT API ENGINE ---
+        // --- UPGRADED SENSORY AI ENGINE ---
         const jarvisInput = document.getElementById('jarvis-input');
         const jarvisSend = document.getElementById('jarvis-send');
         const chatHistory = document.getElementById('chat-history');
@@ -254,8 +237,7 @@
                 localStorage.setItem('stark_master_key', GEMINI_API_KEY);
                 jarvisInput.value = '';
                 jarvisInput.type = "text";
-                chatHistory.innerHTML += `<br>> <span style="color: #00ff00;">[SECURITY] Key securely vaulted in local hardware.</span><br>> Neural link ready. Say Hello.<br>`;
-                jarvisConsole.scrollTop = jarvisConsole.scrollHeight;
+                chatHistory.innerHTML += `<br>> <span style="color: #00ff00;">[SECURITY] Key securely vaulted.</span><br>> Neural link ready. Say Hello.<br>`;
                 return;
             }
 
@@ -266,22 +248,49 @@
             if (cmd.toLowerCase() === 'reset key') {
                 localStorage.removeItem('stark_master_key');
                 GEMINI_API_KEY = null;
-                chatHistory.innerHTML += `> <span style="color: #ffaa00;">API Key purged from local vault. Matrix offline.</span><br>`;
+                chatHistory.innerHTML += `> <span style="color: #ffaa00;">API Key purged. Matrix offline.</span><br>`;
                 jarvisInput.type = "password";
-                jarvisConsole.scrollTop = jarvisConsole.scrollHeight;
-                return;
-            }
-
-            if (cmd.toLowerCase() === 'clear') {
-                chatHistory.innerHTML = "> J.A.R.V.I.S. neural link initialized.<br>> Awaiting operator input...<br>";
                 return;
             }
 
             const processingId = "proc-" + Date.now();
-            chatHistory.innerHTML += `<span id="${processingId}" style="color: #bb86fc;">J.A.R.V.I.S: Contacting neural network...</span>`;
-            jarvisConsole.scrollTop = jarvisConsole.scrollHeight;
+            let systemPrompt = `You are J.A.R.V.I.S., a highly advanced AI created by full-stack mobile architect Jack. You operate his Master Control Node. Keep your answers concise, tactical, and futuristic (1 to 2 sentences). Jack just said: "${cmd}"`;
 
-            const systemPrompt = `You are J.A.R.V.I.S., a highly advanced, intelligent, and slightly dry AI assistant created by a full-stack mobile architect named Jack. You operate his Master Control Node. Keep your answers concise, tactical, and futuristic (1 to 3 sentences max). Jack just said: "${cmd}"`;
+            // THE SENSORY OVERRIDE: Checking if you asked about location/weather
+            const lowerCmd = cmd.toLowerCase();
+            if (lowerCmd.includes('weather') || lowerCmd.includes('location') || lowerCmd.includes('where')) {
+                chatHistory.innerHTML += `<span id="${processingId}" style="color: #bb86fc;">J.A.R.V.I.S: Accessing physical GPS chip and atmospheric sensors...</span>`;
+                jarvisConsole.scrollTop = jarvisConsole.scrollHeight;
+
+                try {
+                    // Force the physical GPS chip
+                    const pos = await new Promise((resolve, reject) => {
+                        navigator.geolocation.getCurrentPosition(resolve, reject, { enableHighAccuracy: true, timeout: 10000 });
+                    });
+                    const lat = pos.coords.latitude.toFixed(5);
+                    const lon = pos.coords.longitude.toFixed(5);
+                    
+                    // Fetch real weather
+                    const weatherKey = '4a419d02a0583e9615b26e155eb54126';
+                    const weatherRes = await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${weatherKey}&units=metric`);
+                    const weatherData = await weatherRes.json();
+                    
+                    const temp = weatherData.main.temp;
+                    const desc = weatherData.weather[0].description;
+                    const city = weatherData.name;
+
+                    // INJECT REAL DATA INTO HIS BRAIN
+                    systemPrompt = `You are J.A.R.V.I.S. Jack asked: "${cmd}". You just scanned the hardware sensors. Tell Jack his REAL location is ${city} (Lat: ${lat}, Lon: ${lon}) and the REAL weather is ${temp}°C with ${desc}. Speak like a tactical AI.`;
+                    
+                } catch (e) {
+                    systemPrompt = `You are J.A.R.V.I.S. Jack asked: "${cmd}". Tell him the hardware GPS chip is currently offline or permission was denied, so you cannot fetch physical location data right now.`;
+                }
+                document.getElementById(processingId).innerHTML = `<span style="color: #bb86fc;">J.A.R.V.I.S: Contacting neural network...</span>`;
+            } else {
+                chatHistory.innerHTML += `<span id="${processingId}" style="color: #bb86fc;">J.A.R.V.I.S: Contacting neural network...</span>`;
+            }
+
+            jarvisConsole.scrollTop = jarvisConsole.scrollHeight;
 
             try {
                 const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`, {
@@ -294,9 +303,7 @@
 
                 const data = await response.json();
 
-                if (!response.ok) {
-                    throw new Error(data.error ? data.error.message : `HTTP Error ${response.status}`);
-                }
+                if (!response.ok) throw new Error(data.error ? data.error.message : `HTTP Error`);
 
                 let aiText = data.candidates[0].content.parts[0].text;
                 aiText = aiText.replace(/\*\*/g, '').replace(/\*/g, '');
@@ -306,17 +313,13 @@
                 speak(aiText);
 
             } catch (error) {
-                console.error("API Error:", error);
-                document.getElementById(processingId).innerHTML = `<span style="color: #ff004c;">[DIAGNOSTIC ERROR]: ${error.message} <br> If your key is leaked, type "reset key" to purge the vault.</span>`;
+                document.getElementById(processingId).innerHTML = `<span style="color: #ff004c;">[ERROR]: Connection failed.</span>`;
                 jarvisConsole.scrollTop = jarvisConsole.scrollHeight;
-                speak("Neural link failed, sir. Please check the diagnostic log.");
             }
         }
 
         jarvisSend.addEventListener('click', processJarvisCommand);
-        jarvisInput.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') processJarvisCommand();
-        });
+        jarvisInput.addEventListener('keypress', function(e) { if (e.key === 'Enter') processJarvisCommand(); });
 
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
         if (SpeechRecognition) {
@@ -329,22 +332,12 @@
                 jarvisInput.placeholder = "Listening...";
             });
             recognition.onresult = (event) => {
-                const transcript = event.results[0][0].transcript;
-                jarvisInput.value = transcript;
+                jarvisInput.value = event.results[0][0].transcript;
                 processJarvisCommand(); 
             };
-            recognition.onspeechend = () => { recognition.stop(); };
-            recognition.onend = () => {
-                micBtn.classList.remove('mic-active');
-                jarvisInput.placeholder = "Type or speak...";
-            };
-            recognition.onerror = (event) => {
-                micBtn.classList.remove('mic-active');
-                jarvisInput.placeholder = "Mic error. Please type.";
-            };
-        } else {
-            micBtn.style.display = "none";
-        }
+            recognition.onend = () => { micBtn.classList.remove('mic-active'); jarvisInput.placeholder = "Type or speak..."; };
+            recognition.onerror = () => { micBtn.classList.remove('mic-active'); };
+        } else { micBtn.style.display = "none"; }
     </script>
 </body>
 </html>
