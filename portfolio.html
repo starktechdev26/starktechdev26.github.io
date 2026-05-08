@@ -119,16 +119,73 @@
             window.scrollTo({ top: 250, behavior: 'smooth' });
         }
 
+        // --- GPS HARDWARE & WEATHER API LOGIC ---
         const terminal = document.getElementById('rs-terminal');
         let isRunning = false;
+        
         function runCommand(cmdType) {
             if (isRunning) return; 
             isRunning = true;
             terminal.style.display = 'block';
-            terminal.innerHTML = `> Establishing secure connection to target device...<br>`;
+            
+            if (cmdType === 'LOCATE') {
+                terminal.innerHTML += `> Booting physical GPS module...<br>`;
+                terminal.innerHTML += `> Bypassing network estimates...<br>`;
+                terminal.scrollTop = terminal.scrollHeight;
+
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(
+                        async (position) => {
+                            const lat = position.coords.latitude.toFixed(5);
+                            const lon = position.coords.longitude.toFixed(5);
+                            const acc = position.coords.accuracy.toFixed(1);
+                            
+                            terminal.innerHTML += `> <span style='color: #00ff00;'>HARDWARE SATELLITE LOCK ACQUIRED.</span><br>`;
+                            terminal.innerHTML += `> <span style='color: #ffaa00;'>LAT: ${lat}° N, LONG: ${lon}° E</span><br>`;
+                            terminal.innerHTML += `> <span style='color: #888;'>Accuracy Variance: ±${acc} meters</span><br>`;
+                            terminal.scrollTop = terminal.scrollHeight;
+
+                            // Tactical Weather Integration
+                            try {
+                                terminal.innerHTML += `> Fetching atmospheric data from grid...<br>`;
+                                const weatherKey = '4a419d02a0583e9615b26e155eb54126';
+                                const weatherRes = await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${weatherKey}&units=metric`);
+                                const weatherData = await weatherRes.json();
+                                
+                                if (weatherRes.ok) {
+                                    const temp = weatherData.main.temp;
+                                    const desc = weatherData.weather[0].description;
+                                    const city = weatherData.name;
+                                    terminal.innerHTML += `> <span style='color: var(--stark-cyan);'>ATMOSPHERE (${city}): ${temp}°C, ${desc.toUpperCase()}</span><br>`;
+                                } else {
+                                    terminal.innerHTML += `> <span style='color: #ffaa00;'>[WEATHER API] Offline or Invalid Key.</span><br>`;
+                                }
+                            } catch(e) {
+                                terminal.innerHTML += `> <span style='color: #ffaa00;'>[WEATHER API] Connection failed.</span><br>`;
+                            }
+
+                            terminal.innerHTML += `> Location packet saved to secure DB.<br><br>`;
+                            terminal.scrollTop = terminal.scrollHeight;
+                            isRunning = false;
+                        },
+                        (error) => {
+                            terminal.innerHTML += `> <span style='color: #ff004c;'>[ERROR] GPS Chip access denied or offline: ${error.message}</span><br><br>`;
+                            terminal.scrollTop = terminal.scrollHeight;
+                            isRunning = false;
+                        },
+                        { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
+                    );
+                } else {
+                    terminal.innerHTML += `> <span style='color: #ff004c;'>[ERROR] Hardware GPS not supported.</span><br><br>`;
+                    isRunning = false;
+                }
+                return; 
+            }
+            
+            // Standard Commands
+            terminal.innerHTML += `> Establishing secure connection to target device...<br>`;
             let cmdLines = [];
-            if (cmdType === 'LOCATE') cmdLines = ["> Bypassing location spoofing...", "> Triangulating coordinates...", "> <span style='color: #ffaa00;'>LAT: 13.1004° N, LONG: 77.3940° E (Nelamangala)</span>", "> Location packet saved to secure DB."];
-            else if (cmdType === 'LOCKDOWN') cmdLines = ["> Pushing kernel-level lock command...", "> Overriding volume buttons...", "> Disabling power-off sequence...", "> <span style='color: var(--stark-cyan);'>DEVICE SECURELY LOCKED.</span>"];
+            if (cmdType === 'LOCKDOWN') cmdLines = ["> Pushing kernel-level lock command...", "> Overriding volume buttons...", "> Disabling power-off sequence...", "> <span style='color: var(--stark-cyan);'>DEVICE SECURELY LOCKED.</span>"];
             else if (cmdType === 'SIREN') cmdLines = ["> Bypassing silent/DND mode...", "> Routing audio output to maximum gain...", "> <span style='color: var(--stark-red);'>[!!!] KLAXON ENGAGED [!!!]</span>", "> Transmitting remote audio feed..."];
 
             let i = 0;
@@ -156,13 +213,11 @@
         const micBtn = document.getElementById('mic-btn');
         let voiceEnabled = false;
         
-        // PULL KEY FROM DEVICE STORAGE, NEVER FROM CODE
         let GEMINI_API_KEY = localStorage.getItem('stark_master_key'); 
 
-        // Initial Boot Sequence
         if (!GEMINI_API_KEY) {
             chatHistory.innerHTML = `> <span style="color: #ff004c;">WARNING: API Key missing.</span><br>> Please paste your new Gemini API key below and press SEND to lock it into local hardware.<br>`;
-            jarvisInput.type = "password"; // Hide the key as you paste it
+            jarvisInput.type = "password"; 
         } else {
             chatHistory.innerHTML = `> <span style="color: #00ff00;">Hardware Vault unlocked.</span><br>> J.A.R.V.I.S. neural matrix fully initialized.<br>> Awaiting operator input...<br>`;
             jarvisInput.type = "text";
@@ -194,7 +249,6 @@
             const cmd = jarvisInput.value.trim();
             if (!cmd) return;
 
-            // VAULTING PROTOCOL: If no key is saved, assume the input IS the key
             if (!GEMINI_API_KEY) {
                 GEMINI_API_KEY = cmd;
                 localStorage.setItem('stark_master_key', GEMINI_API_KEY);
@@ -209,7 +263,6 @@
             jarvisInput.value = '';
             jarvisConsole.scrollTop = jarvisConsole.scrollHeight;
 
-            // Security Command to purge key
             if (cmd.toLowerCase() === 'reset key') {
                 localStorage.removeItem('stark_master_key');
                 GEMINI_API_KEY = null;
