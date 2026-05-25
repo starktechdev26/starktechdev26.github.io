@@ -29,7 +29,6 @@
             animation: pulse-mic 1.5s infinite; border-color: #fff !important;
         }
 
-        /* BULLETPROOF MOBILE NAV OVERRIDE */
         .stark-nav {
             display: flex !important;
             overflow-x: auto !important; 
@@ -41,8 +40,8 @@
         .stark-nav::-webkit-scrollbar { display: none; }
         .nav-btn { 
             flex-shrink: 0 !important; 
-            font-size: 1rem !important; /* Forces normal readable text */
-            padding: 10px !important; /* Creates a large tappable area */
+            font-size: 1rem !important; 
+            padding: 10px !important; 
             min-height: 40px !important; 
             background: transparent;
             color: #888;
@@ -67,6 +66,7 @@
 
     <nav class="stark-nav">
         <button class="nav-btn active" onclick="switchSector('sect-portfolio', this)">PORTFOLIO</button>
+        <button class="nav-btn" onclick="switchSector('sect-profile', this)">JAYA KUMAR</button>
         <button class="nav-btn" onclick="switchSector('sect-projects', this)">APP CONTROLS</button>
         <button class="nav-btn" onclick="switchSector('sect-assistant', this)">ASSISTANT</button>
         <button class="nav-btn" onclick="switchSector('sect-chatbot', this)">CHATBOT</button>
@@ -105,7 +105,7 @@
                 <span class="status-badge" style="color: #bb86fc; border-color: #bb86fc; background: rgba(187, 134, 252, 0.1);">ROADMAP</span>
             </div>
             <ul>
-                <li><strong>Phase 1:</strong> Complete academic tenure and final BCA assessments (May 2026).</li>
+                <li><strong>Phase 1:</strong> Complete academic tenure and final BCA assessments.</li>
                 <li><strong>Phase 2:</strong> Secure a high-level technical internship/deployment in the Bangalore sector to battle-test proprietary code.</li>
                 <li><strong>Phase 3:</strong> Scale the Raksha-Suraksha anti-theft framework into a commercial, enterprise-grade mobile security solution.</li>
                 <li><strong>Phase 4:</strong> Expand mastery in digital legal frameworks, specifically Cyber Law and IP Rights, to protect proprietary innovations.</li>
@@ -122,6 +122,33 @@
                 <button id="copy-email-btn" class="action-btn" style="font-size: 0.8rem;">Email Me</button>
                 <a href="https://github.com/starktechdev26" target="_blank" class="action-btn" style="font-size: 0.8rem;">GitHub</a>
             </div>
+        </div>
+    </main>
+
+    <main id="sect-profile" class="sector dashboard">
+        <div class="data-card" style="border-left-color: #00ffaa;">
+            <div class="card-header" style="border-bottom-color: rgba(0, 255, 170, 0.4);">
+                <h2 style="color: #00ffaa;">S. Jaya Kumar (Jack)</h2>
+                <span class="status-badge" style="color: #00ffaa; border-color: #00ffaa; background: rgba(0, 255, 170, 0.1);">MASTER ARCHITECT</span>
+            </div>
+            <p><strong>Location:</strong> Nelamangala, Bangalore Grid</p>
+            <p><strong>Academic Profile:</strong> Final Semester BCA student at Bangalore University (NEP).</p>
+        </div>
+
+        <div class="data-card" style="border-left-color: var(--stark-cyan);">
+            <div class="card-header">
+                <h2>The Mobile-First Philosophy</h2>
+                <span class="status-badge">HARDWARE</span>
+            </div>
+            <p>Engineering complex, globally accessible web architectures and zero-trust security networks using exclusively localized mobile hardware. Primary development executed via Samsung Galaxy A07 5G and Redmi Y3 nodes.</p>
+        </div>
+
+        <div class="data-card" style="border-left-color: #ffaa00;">
+            <div class="card-header" style="border-bottom-color: rgba(255, 170, 0, 0.4);">
+                <h2 style="color: #ffaa00;">Off the Grid</h2>
+                <span class="status-badge" style="color: #ffaa00; border-color: #ffaa00; background: rgba(255, 170, 0, 0.1);">DECRYPTED</span>
+            </div>
+            <p>When not compiling code or navigating the complexities of cyber crimes and digital law, processing power is diverted to tracking the latest Indian cinema sequels and diving deep into Iron Man lore.</p>
         </div>
     </main>
 
