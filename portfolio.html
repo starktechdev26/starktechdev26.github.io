@@ -188,12 +188,13 @@
             </div>
         </div>
 
+        <!-- Artifact Download Bridge -->
         <div class="data-card" style="border-left-color: #ffaa00;">
             <div class="card-header" style="border-bottom-color: rgba(255, 170, 0, 0.4);">
                 <h2 style="color: #ffaa00;">Academic & Project Artifacts</h2>
                 <span class="status-badge" style="color: #ffaa00; border-color: #ffaa00; background: rgba(255, 170, 0, 0.1);">PUBLIC DB</span>
             </div>
-            <p style="font-size: 0.85rem; margin-bottom: 15px;">Secure download bridge for Capstone Presentation and ML Lab Manual.</p>
+            <p style="font-size: 0.85rem; margin-bottom: 15px;">Secure download bridge for Capstone Presentation and ML Lab Manuals.</p>
             
             <div class="btn-group-2" style="grid-template-columns: 1fr; gap: 12px;">
                 <a href="Pptint.pptx" download="Internship_Report_JayaKumar.pptx" 
@@ -205,6 +206,11 @@
                    class="action-btn" 
                    style="border-color: #00ffaa; color: #00ffaa; text-decoration: none; display: block; text-align: center;">
                    DOWNLOAD ML MOCK (PDF)
+                </a>
+                <a href="ml.pdf" download="ML_Lab_Manual_JayaKumar.pdf" 
+                   class="action-btn" 
+                   style="border-color: #bb86fc; color: #bb86fc; text-decoration: none; display: block; text-align: center;">
+                   DOWNLOAD ML MANUAL (PDF)
                 </a>
             </div>
         </div>
@@ -436,7 +442,8 @@
             try {
                 let text = await fetchGemini(taskPrompt);
                 // Simple markdown parsing for code blocks in UI
-                text = text.replace(/```(.*?)```/gs, '<pre>$1</pre>').replace(/\n/g, '<br>');
+                text = text.replace(/```(.*?)
+```/gs, '<pre>$1</pre>').replace(/\n/g, '<br>');
                 document.getElementById(processingId).innerHTML = `<strong style="color: #00ffaa;">System:</strong><br>${text}<br><br><hr style="border-color:#333; margin: 15px 0;">`;
             } catch (err) {
                 document.getElementById(processingId).innerHTML = `<span style="color: #ff004c;">[ERROR]: Task generation failed. Check API key.</span><br><br>`;
@@ -447,4 +454,3 @@
     </script>
 </body>
 </html>
-
